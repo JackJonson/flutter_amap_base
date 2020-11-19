@@ -27,7 +27,7 @@ Widget buildTargetAMapView({
       aMapOptions: aMapOptions,
     );
 
-class HtmlElementViewEx extends HtmlElementView {
+class HtmlElementViewEx extends HtmlElementView implements AMapView {
   final MapCreatedCallback onAMapViewCreated; //!!!
   final AMapOptions aMapOptions;
 

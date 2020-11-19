@@ -17,13 +17,13 @@ Widget buildTargetAMapView({
   PlatformViewHitTestBehavior hitTestBehavior = PlatformViewHitTestBehavior.opaque,
   TextDirection layoutDirection,
   AMapOptions aMapOptions = const AMapOptions(),
-})=>AMapView(onAMapViewCreated: onAMapViewCreated,hitTestBehavior: hitTestBehavior,layoutDirection: layoutDirection,amapOptions: aMapOptions,);
+})=>AMapMobileView(onAMapViewCreated: onAMapViewCreated,hitTestBehavior: hitTestBehavior,layoutDirection: layoutDirection,amapOptions: aMapOptions,);
 
 
 const _viewType = 'me.yohom/AMapView';
 
-class AMapView extends StatelessWidget {
-  const AMapView({
+class AMapMobileView extends AMapView {
+  const AMapMobileView({
     Key key,
     this.onAMapViewCreated,
     this.hitTestBehavior = PlatformViewHitTestBehavior.opaque,
