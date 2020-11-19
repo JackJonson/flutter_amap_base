@@ -1,7 +1,9 @@
+
 import 'dart:convert';
 
-import 'package:amap_base/amap_base.dart';
+import 'package:amap_base/src/amap_view.dart';
 import 'package:amap_base/src/common/misc.dart';
+import 'package:amap_base/src/map/amap_controller.dart';
 import 'package:amap_base/src/map/model/amap_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -9,9 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-const _viewType = 'me.yohom/AMapView';
+Widget buildTargetAMapView({
+  Key key,
+  MapCreatedCallback onAMapViewCreated,
+  PlatformViewHitTestBehavior hitTestBehavior = PlatformViewHitTestBehavior.opaque,
+  TextDirection layoutDirection,
+  AMapOptions aMapOptions = const AMapOptions(),
+})=>AMapView(onAMapViewCreated: onAMapViewCreated,hitTestBehavior: hitTestBehavior,layoutDirection: layoutDirection,amapOptions: aMapOptions,);
 
-typedef void MapCreatedCallback(AMapController controller);
+
+const _viewType = 'me.yohom/AMapView';
 
 class AMapView extends StatelessWidget {
   const AMapView({
@@ -65,7 +74,7 @@ class AMapView extends StatelessWidget {
   }
 
   void _onViewCreated(int id) {
-    final controller = AMapController.withId(id);
+    final controller = AMapMobileController.withId(id);
     if (onAMapViewCreated != null) {
       onAMapViewCreated(controller);
     }

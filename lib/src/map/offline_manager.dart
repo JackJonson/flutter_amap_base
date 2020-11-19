@@ -1,15 +1,18 @@
+import 'dart:async';
+
+import 'package:amap_base/src/interface/map/offline_manager.dart';
 import 'package:flutter/services.dart';
 
-class OfflineManager {
-  static OfflineManager _instance;
+class OfflineManagerMobile extends OfflineManager {
+  static OfflineManagerMobile _instance;
 
   static const _channel = MethodChannel('me.yohom/offline');
 
-  OfflineManager._();
+  OfflineManagerMobile._();
 
-  factory OfflineManager() {
+  factory OfflineManagerMobile() {
     if (_instance == null) {
-      _instance = OfflineManager._();
+      _instance = OfflineManagerMobile._();
       return _instance;
     } else {
       return _instance;
@@ -17,6 +20,7 @@ class OfflineManager {
   }
 
   /// 打开离线地图管理页
+  @override
   Future openOfflineManager() {
     return _channel.invokeMethod('offline#openOfflineManager');
   }

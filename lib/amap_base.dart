@@ -16,7 +16,7 @@ export 'src/location/amap_location.dart';
 export 'src/location/model/location.dart';
 export 'src/location/model/location_client_options.dart';
 export 'src/map/amap_controller.dart';
-export 'src/map/amap_view.dart';
+export 'src/amap_view.dart';
 export 'src/map/calculate_tool.dart';
 export 'src/map/model/amap_options.dart';
 export 'src/map/model/camera_position.dart';
@@ -40,6 +40,12 @@ export 'src/search/model/route_poi_search_query.dart';
 export 'src/search/model/poi_result.dart';
 export 'src/search/model/poi_item.dart';
 export 'src/search/model/search_bound.dart';
+export 'src/interface/map/amap_controller.dart';
+export 'src/interface/map/calculate_tool.dart';
+export 'src/interface/map/offline_manager.dart';
+export 'src/interface/location/amap_location.dart';
+export 'src/interface/navi/amap_navi.dart';
+export 'src/interface/search/amap_search.dart';
 
 class AMap {
   static final _channel = MethodChannel('me.yohom/amap_base');
@@ -67,7 +73,7 @@ class AMap {
       },
     );
 
-    await AMapLocation().init();
+    await AMapMobileLocation().init();
   }
 
   @Deprecated('使用init方法初始化的时候设置key')

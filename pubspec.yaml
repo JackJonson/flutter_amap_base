@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_plugin_android_lifecycle: ^1.0.0
+  js: ^0.6.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -17,8 +19,14 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: me.yohom.amapbase
-    pluginClass: AMapBasePlugin
+    platforms:
+      android:
+        package: me.yohom.amapbase
+        pluginClass: AMapBasePlugin
+      ios:
+        pluginClass: AMapBasePlugin
+      web:
+        pluginClass: AMapBasePlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:

@@ -1,20 +1,22 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:amap_base/src/interface/map/calculate_tool.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 import '../map/model/latlng.dart';
 
-class CalculateTools {
+class CalculateMobileTools extends CalculateTools{
   static const _channel = MethodChannel('me.yohom/tool');
 
-  static CalculateTools _instance;
+  static CalculateMobileTools _instance;
 
-  CalculateTools._();
+  CalculateMobileTools._();
 
-  factory CalculateTools() {
+  factory CalculateMobileTools() {
     if (_instance == null) {
-      _instance = CalculateTools._();
+      _instance = CalculateMobileTools._();
       return _instance;
     } else {
       return _instance;
@@ -27,6 +29,7 @@ class CalculateTools {
   /// [lon] 经度
   ///
   /// [type] 原坐标类型, 这部分请查阅高德地图官方文档
+  @override
   Future<LatLng> convertCoordinate({
     @required double lat,
     @required double lon,
@@ -50,6 +53,7 @@ class CalculateTools {
     return LatLng.fromJson(jsonDecode(result));
   }
 
+  @override
   Future<double> calcDistance(LatLng latLng1, LatLng latLng2) async {
     Map<String, dynamic> params = {
       "p1": latLng1.toJson(),
@@ -59,14 +63,4 @@ class CalculateTools {
     double length = await _channel.invokeMethod("tool#calcDistance", params);
     return length;
   }
-}
-
-enum LatLngType {
-  gps,
-  baidu,
-  mapBar,
-  mapABC,
-  soSoMap,
-  aliYun,
-  google,
 }

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:amap_base/amap_base.dart';
 import 'package:amap_base/src/common/log.dart';
+import 'package:amap_base/src/interface/map/amap_controller.dart';
 import 'package:amap_base/src/map/model/marker_options.dart';
 import 'package:amap_base/src/map/model/my_location_style.dart';
 import 'package:amap_base/src/map/model/polyline_options.dart';
@@ -14,13 +15,13 @@ import 'package:meta/meta.dart';
 
 import 'model/touch_event.dart';
 
-class AMapController {
+class AMapMobileController extends AMapController{
   final MethodChannel _mapChannel;
   final EventChannel _markerClickedEventChannel;
   final EventChannel _cameraChangeEventChannel;
   final EventChannel _mapTouchEventChannel;
 
-  AMapController.withId(int id)
+  AMapMobileController.withId(int id)
       : _mapChannel = MethodChannel('me.yohom/map$id'),
         _markerClickedEventChannel = EventChannel('me.yohom/marker_clicked$id'),
         _mapTouchEventChannel = EventChannel('me.yohom/map_touch'),
@@ -28,7 +29,8 @@ class AMapController {
 
   void dispose() {}
 
-  //region dart -> native
+  ///region dart -> native
+  @override
   Future setMyLocationStyle(MyLocationStyle style) {
     final _styleJson =
     jsonEncode(style?.toJson() ?? MyLocationStyle().toJson());
@@ -40,6 +42,7 @@ class AMapController {
     );
   }
 
+  @override
   Future setUiSettings(UiSettings uiSettings) {
     final _uiSettings = jsonEncode(uiSettings.toJson());
 
@@ -49,7 +52,7 @@ class AMapController {
       {'uiSettings': _uiSettings},
     );
   }
-
+  @override
   Future addMarker(MarkerOptions options, {
     bool lockedToScreen = false,
     bool openAnimation = true,
@@ -65,7 +68,7 @@ class AMapController {
       },
     );
   }
-
+  @override
   Future addMarkers(List<MarkerOptions> optionsList, {
     bool moveToCenter = true,
     bool clear = false,
@@ -86,37 +89,38 @@ class AMapController {
       },
     );
   }
-
+  @override
   Future showIndoorMap(bool enable) {
     return _mapChannel.invokeMethod(
       'map#showIndoorMap',
       {'showIndoorMap': enable},
     );
   }
-
+  @override
   Future setMapType(int mapType) {
     return _mapChannel.invokeMethod(
       'map#setMapType',
       {'mapType': mapType},
     );
   }
-
+  @override
   Future setLanguage(int language) {
     return _mapChannel.invokeMethod(
       'map#setLanguage',
       {'language': language},
     );
   }
-
+  @override
   Future clearMarkers() {
     return _mapChannel.invokeMethod('marker#clear');
   }
-
+  @override
   Future clearMap() {
     return _mapChannel.invokeMethod('map#clear');
   }
 
   /// 设置缩放等级
+  @override
   Future setZoomLevel(int level) {
     L.p('setZoomLevel dart端参数: level -> $level');
 
@@ -127,6 +131,7 @@ class AMapController {
   }
 
   /// 设置地图中心点
+  @override
   Future setPosition({
     @required LatLng target,
     double zoom = 10,
@@ -148,6 +153,7 @@ class AMapController {
   }
 
   /// 限制地图的显示范围
+  @override
   Future setMapStatusLimits({
     /// 西南角 [Android]
     @required LatLng swLatLng,
@@ -180,6 +186,7 @@ class AMapController {
   }
 
   /// 添加线
+  @override
   Future addPolyline(PolylineOptions options) {
     L.p('addPolyline dart端参数: options -> $options');
 
@@ -190,6 +197,7 @@ class AMapController {
   }
 
   /// 移动镜头到当前的视角
+  @override
   Future zoomToSpan(List<LatLng> bound, {
     bool isMoveCenter = true,
     int padding = 80,
@@ -210,6 +218,7 @@ class AMapController {
   }
 
   /// 移动指定LatLng到中心
+  @override
   Future changeLatLng(LatLng target) {
     L.p('changeLatLng dart端参数: target -> $target');
 
@@ -220,6 +229,7 @@ class AMapController {
   }
 
   /// 获取中心点
+  @override
   Future<LatLng> getCenterLatlng() async {
     String result = await _mapChannel.invokeMethod("map#getCenterPoint");
     return LatLng.fromJson(json.decode(result));
@@ -228,6 +238,7 @@ class AMapController {
   /// 截图
   ///
   /// 可能会抛出 [PlatformException]
+  @override
   Future<Uint8List> screenShot() async {
     try {
       var result = await _mapChannel.invokeMethod("map#screenshot");
@@ -247,6 +258,7 @@ class AMapController {
   }
 
   /// 设置自定义样式的文件路径
+  @override
   Future setCustomMapStylePath(String path) {
     L.p('setCustomMapStylePath dart端参数: path -> $path');
 
@@ -257,6 +269,7 @@ class AMapController {
   }
 
   /// 使能自定义样式
+  @override
   Future setMapCustomEnable(bool enabled) {
     L.p('setMapCustomEnable dart端参数: enabled -> $enabled');
 
@@ -267,6 +280,7 @@ class AMapController {
   }
 
   /// 使用在线自定义样式
+  @override
   Future setCustomMapStyleID(String styleId) {
     L.p('setCustomMapStyleID dart端参数: styleId -> $styleId');
 
@@ -279,18 +293,21 @@ class AMapController {
   //endregion
 
   /// marker点击事件流
+  @override
   Stream<MarkerOptions> get markerClickedEvent =>
       _markerClickedEventChannel
           .receiveBroadcastStream()
           .map((data) => MarkerOptions.fromJson(jsonDecode(data)));
 
   /// camera change事件流
+  @override
   Stream<CameraPosition> get cameraChangeEvent =>
       _cameraChangeEventChannel
           .receiveBroadcastStream()
           .map((data) => CameraPosition.fromJson(jsonDecode(data)));
 
   /// map touch事件流
+  @override
   Stream<TouchEvent> get mapTouchEvent =>
       _mapTouchEventChannel
           .receiveBroadcastStream()

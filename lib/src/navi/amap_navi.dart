@@ -1,30 +1,28 @@
+import 'package:amap_base/src/interface/navi/amap_navi.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
-class AMapNavi {
+class AMapMobileNavi extends AMapNavi{
   static final _channel = MethodChannel('me.yohom/navi');
 
-  static const drive = 0;
-  static const walk = 1;
-  static const ride = 2;
+  static AMapMobileNavi _instance;
 
-  static AMapNavi _instance;
+  AMapMobileNavi._();
 
-  AMapNavi._();
-
-  factory AMapNavi() {
+  factory AMapMobileNavi() {
     if (_instance == null) {
-      _instance = AMapNavi._();
+      _instance = AMapMobileNavi._();
       return _instance;
     } else {
       return _instance;
     }
   }
 
+  @override
   void startNavi({
     @required double lat,
     @required double lon,
-    int naviType = drive,
+    int naviType = AMapNavi.drive,
   }) {
     _channel.invokeMethod(
       'navi#startNavi',

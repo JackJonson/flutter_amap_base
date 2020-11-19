@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:amap_base/amap_base.dart';
 import 'package:amap_base/src/common/log.dart';
+import 'package:amap_base/src/interface/search/amap_search.dart';
 import 'package:amap_base/src/search/model/bus_station_result.dart';
 import 'package:amap_base/src/search/model/drive_route_result.dart';
 import 'package:amap_base/src/search/model/poi_item.dart';
@@ -11,16 +13,16 @@ import 'package:amap_base/src/search/model/regeocode_result.dart';
 import 'package:amap_base/src/search/model_ios/bus_station_result.ios.dart';
 import 'package:flutter/services.dart';
 
-class AMapSearch {
-  static AMapSearch _instance;
+class AMapMobileSearch extends AMapSearch{
+  static AMapMobileSearch _instance;
 
   static const _searchChannel = MethodChannel('me.yohom/search');
 
-  AMapSearch._();
+  AMapMobileSearch._();
 
-  factory AMapSearch() {
+  factory AMapMobileSearch() {
     if (_instance == null) {
-      _instance = AMapSearch._();
+      _instance = AMapMobileSearch._();
       return _instance;
     } else {
       return _instance;
@@ -28,6 +30,7 @@ class AMapSearch {
   }
 
   /// 搜索poi
+  @override
   Future<PoiResult> searchPoi(PoiSearchQuery query) {
     L.p('方法searchPoi dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
@@ -38,6 +41,7 @@ class AMapSearch {
   }
 
   /// 搜索poi 周边搜索
+  @override
   Future<PoiResult> searchPoiBound(PoiSearchQuery query) {
     L.p('searchPoiBound dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
@@ -48,6 +52,7 @@ class AMapSearch {
   }
 
   /// 搜索poi 多边形搜索
+  @override
   Future<PoiResult> searchPoiPolygon(PoiSearchQuery query) {
     L.p('searchPoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
@@ -59,6 +64,7 @@ class AMapSearch {
   }
 
   /// 按id搜索poi
+  @override
   Future<PoiItem> searchPoiId(String id) {
     L.p('searchPoiId dart端参数: id -> $id');
 
@@ -69,6 +75,7 @@ class AMapSearch {
   }
 
   /// 道路沿途直线检索POI
+  @override
   Future<RoutePoiResult> searchRoutePoiLine(RoutePoiSearchQuery query) {
     L.p('searchRoutePoiLine dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
@@ -80,6 +87,7 @@ class AMapSearch {
   }
 
   /// 道路沿途多边形检索POI
+  @override
   Future<RoutePoiResult> searchRoutePoiPolygon(RoutePoiSearchQuery query) {
     L.p('searchRoutePoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
@@ -91,6 +99,7 @@ class AMapSearch {
   }
 
   /// 计算驾驶路线
+  @override
   Future<DriveRouteResult> calculateDriveRoute(RoutePlanParam param) {
     final _routePlanParam = param.toJsonString();
     L.p('方法calculateDriveRoute dart端参数: _routePlanParam -> $_routePlanParam');
@@ -105,6 +114,7 @@ class AMapSearch {
   }
 
   /// 地址转坐标 [name]表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode
+  @override
   Future<GeocodeResult> searchGeocode(String name, String city) {
     L.p('方法searchGeocode dart端参数: name -> $name, cityCode -> $city');
 
@@ -118,6 +128,7 @@ class AMapSearch {
   }
 
   /// 逆地理编码（坐标转地址）
+  @override
   Future<ReGeocodeResult> searchReGeocode(
     LatLng point,
     double radius,
@@ -141,6 +152,7 @@ class AMapSearch {
   /// 距离测量 参考[链接](https://lbs.amap.com/api/android-sdk/guide/computing-equipment/distancesearch)
   ///
   /// type 分别对应
+  @override
   Future<List<int>> distanceSearch(
       List<LatLng> origins, LatLng target, DistanceSearchType type) async {
     List<Map<String, Object>> oriList = [];
@@ -164,6 +176,7 @@ class AMapSearch {
   ///
   /// [stationName] 公交站点名
   /// [city] 所在城市名或者城市区号
+  @override
   Future<BusStationResult> searchBusStation(String stationName, String city) {
     L.p('方法searchBusStation dart端参数: stationName -> $stationName, city -> $city');
 
@@ -186,7 +199,3 @@ class AMapSearch {
   }
 }
 
-enum DistanceSearchType {
-  line,
-  driver,
-}
