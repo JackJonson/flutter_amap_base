@@ -22,7 +22,7 @@ Widget buildTargetAMapView({
 
 const _viewType = 'me.yohom/AMapView';
 
-class AMapMobileView extends AMapView {
+class AMapMobileView extends StatelessWidget {
   const AMapMobileView({
     Key key,
     this.onAMapViewCreated,

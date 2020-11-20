@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:amap_base/src/interface/map/offline_manager.dart';
 import 'package:flutter/services.dart';
 
+OfflineManager createOfflineManager()=>OfflineManagerMobile();
+
 class OfflineManagerMobile extends OfflineManager {
   static OfflineManagerMobile _instance;
 

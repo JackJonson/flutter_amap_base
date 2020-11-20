@@ -7,6 +7,8 @@ import 'package:meta/meta.dart';
 
 import '../map/model/latlng.dart';
 
+CalculateTools createCalculateTools()=>CalculateMobileTools();
+
 class CalculateMobileTools extends CalculateTools{
   static const _channel = MethodChannel('me.yohom/tool');
 

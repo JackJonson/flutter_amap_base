@@ -8,11 +8,12 @@ import 'package:amap_base_example/widgets/dimens.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await AMap.init('27d67839721288be2ddd87b4fd868822');
   runApp(MaterialApp(
     home: LauncherScreen(),
     theme: ThemeData(primaryColor: Color(0xff292c36)),
   ));
+  await AMap.init('27d67839721288be2ddd87b4fd868822');
+
 }
 
 class LauncherScreen extends StatelessWidget {

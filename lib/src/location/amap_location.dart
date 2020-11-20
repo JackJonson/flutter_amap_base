@@ -7,6 +7,8 @@ import 'package:amap_base/src/location/model/location.dart';
 import 'package:amap_base/src/location/model/location_client_options.dart';
 import 'package:flutter/services.dart';
 
+AMapLocation createLocation()=>AMapMobileLocation();
+
 class AMapMobileLocation extends AMapLocation{
   static AMapMobileLocation _instance;
 

@@ -13,4 +13,4 @@ Widget buildTargetAMapView({
   AMapOptions aMapOptions,
 }) =>
     throw UnimplementedError(
-        '$defaultTargetPlatform is not yet supported by the flutter_2d_amap plugin');
+        '$defaultTargetPlatform is not yet supported');

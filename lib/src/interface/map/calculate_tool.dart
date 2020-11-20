@@ -3,7 +3,13 @@ import 'dart:async';
 import 'package:amap_base/src/map/model/latlng.dart';
 import 'package:meta/meta.dart';
 
-abstract class CalculateTools {
+import 'package:amap_base/src/interface/map/calculate_tool_stub.dart'
+    if (dart.library.html) 'package:amap_base/src/web/calculate_tool.dart'
+    if (dart.library.io) 'package:amap_base/src/map/calculate_tool.dart';
+
+CalculateTools createTools() => createCalculateTools();
+
+class CalculateTools {
 
   /// 转换坐标系
   ///
@@ -15,9 +21,13 @@ abstract class CalculateTools {
     @required double lat,
     @required double lon,
     @required LatLngType type,
-  });
+  }) {
+    return createTools().convertCoordinate(lat: lat, lon: lon, type: type);
+  }
 
-  Future<double> calcDistance(LatLng latLng1, LatLng latLng2);
+  Future<double> calcDistance(LatLng latLng1, LatLng latLng2) {
+    return createTools().calcDistance(latLng1, latLng2);
+  }
 }
 
 enum LatLngType {

@@ -2,6 +2,8 @@ import 'package:amap_base/src/interface/navi/amap_navi.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
+AMapNavi createNavi()=>AMapMobileNavi();
+
 class AMapMobileNavi extends AMapNavi{
   static final _channel = MethodChannel('me.yohom/navi');
 

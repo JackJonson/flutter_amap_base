@@ -17,19 +17,36 @@ Widget buildAMapView({
   TextDirection layoutDirection,
   AMapOptions aMapOptions,
 }) =>
-    buildTargetAMapView();
+    buildTargetAMapView(
+        key: key,
+        onAMapViewCreated: onAMapViewCreated,
+        hitTestBehavior: hitTestBehavior,
+        layoutDirection: layoutDirection,
+        aMapOptions: aMapOptions);
 
-abstract class AMapView extends StatelessWidget {
+class AMapView extends StatelessWidget {
+  final Key key;
+  final MapCreatedCallback onAMapViewCreated;
+  final PlatformViewHitTestBehavior hitTestBehavior;
+  final TextDirection layoutDirection;
+  final AMapOptions amapOptions;
 
   const AMapView({
-    Key key,
-    MapCreatedCallback onAMapViewCreated,
-    PlatformViewHitTestBehavior hitTestBehavior,
-    TextDirection layoutDirection,
-    AMapOptions aMapOptions,
+    this.key,
+    this.onAMapViewCreated,
+    this.hitTestBehavior = PlatformViewHitTestBehavior.opaque,
+    this.layoutDirection,
+    this.amapOptions= const AMapOptions(),
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context);
-
+  Widget build(BuildContext context) {
+    return buildAMapView(
+      key: key,
+      onAMapViewCreated: onAMapViewCreated,
+      hitTestBehavior: hitTestBehavior,
+      layoutDirection: layoutDirection,
+      aMapOptions: amapOptions,
+    );
+  }
 }
