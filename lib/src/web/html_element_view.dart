@@ -13,20 +13,6 @@ import 'package:flutter/widgets.dart';
 // https://github.com/deakjahn/flutter_dropzone
 // https://github.com/flutter/flutter/issues/56181
 
-Widget buildTargetAMapView({
-  Key key,
-  MapCreatedCallback onAMapViewCreated,
-  PlatformViewHitTestBehavior hitTestBehavior =
-      PlatformViewHitTestBehavior.opaque,
-  TextDirection layoutDirection,
-  AMapOptions aMapOptions = const AMapOptions(),
-}) =>
-    HtmlElementViewEx(
-      viewType: DateTime.now().toIso8601String(),
-      onAMapViewCreated: onAMapViewCreated,
-      aMapOptions: aMapOptions,
-    );
-
 class HtmlElementViewEx extends HtmlElementView{
   final MapCreatedCallback onAMapViewCreated; //!!!
   final AMapOptions aMapOptions;

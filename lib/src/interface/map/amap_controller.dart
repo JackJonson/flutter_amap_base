@@ -22,14 +22,14 @@ abstract class AMapController {
   Future addMarker(MarkerOptions options, {
     bool lockedToScreen = false,
     bool openAnimation = true,
-  });
+  }){}
 
   Future addMarkers(List<MarkerOptions> optionsList, {
     bool moveToCenter = true,
     bool clear = false,
     bool clearLast = false,
     bool openAnimation = true,
-  });
+  }){}
 
   Future showIndoorMap(bool enable);
 
@@ -102,7 +102,7 @@ abstract class AMapController {
   //endregion
 
   /// marker点击事件流
-  Stream<MarkerOptions> get markerClickedEvent;
+  Stream<MarkerOptions> get markerClickedEvent=>null;
 
   /// camera change事件流
   Stream<CameraPosition> get cameraChangeEvent;

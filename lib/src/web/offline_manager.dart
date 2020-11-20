@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:amap_base/src/interface/map/offline_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 OfflineManager createOfflineManager()=>OfflineManagerWeb();
 

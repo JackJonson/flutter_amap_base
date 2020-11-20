@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'amap_view_stub.dart'
-    if (dart.library.html) 'package:amap_base/src/web/html_element_view.dart'
+    if (dart.library.html) 'package:amap_base/src/web/amap_view.dart'
     if (dart.library.io) 'package:amap_base/src/map/amap_view.dart';
 
 typedef void MapCreatedCallback(AMapController controller);

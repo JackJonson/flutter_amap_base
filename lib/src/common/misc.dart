@@ -93,7 +93,7 @@ String toResolutionAware(String assetName) {
   final String chosenName = _chooseVariant(
       assetName,
       ImageConfiguration(devicePixelRatio: devicePixelRatio),
-      AMap.assetManifest == null ? null : AMap.assetManifest[assetName]);
+      createAMap().assetManifest == null ? null : createAMap().assetManifest[assetName]);
   L.p('设备devicePixelRatio: $devicePixelRatio, 选中的图片: $chosenName');
   return chosenName;
 }

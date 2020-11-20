@@ -23,10 +23,13 @@ flutter:
       android:
         package: me.yohom.amapbase
         pluginClass: AMapBasePlugin
+        fileName: amap_base.dart
       ios:
         pluginClass: AMapBasePlugin
-      web:
-        pluginClass: AMapBasePlugin
+        fileName: amap_base.dart
+#      web:
+#        pluginClass: AMapBasePlugin
+#        fileName: amap_base.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:

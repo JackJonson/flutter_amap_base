@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class Permissions {
@@ -18,8 +19,13 @@ class Permissions {
 
   /// 请求地图相关权限
   Future<bool> requestPermission() {
-    return _permissionChannel
-        .invokeMethod('requestPermission')
-        .then((result) => result as bool);
+    if(defaultTargetPlatform == TargetPlatform.android||defaultTargetPlatform == TargetPlatform.iOS){
+      return _permissionChannel
+          .invokeMethod('requestPermission')
+          .then((result) => result as bool);
+    }else{
+      return Future.value(true);
+    }
+
   }
 }
