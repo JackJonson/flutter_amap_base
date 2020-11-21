@@ -18,7 +18,7 @@ import 'amapjs.dart';
 
 class AMapWebController extends AMapController {
 
-  AMapWebController(this._aMap, this._widget) {
+  AMapWebController(this._aMap) {
 
     _placeSearchOptions = PlaceSearchOptions(
       extensions: 'all',
@@ -43,7 +43,6 @@ class AMapWebController extends AMapController {
     location();
   }
 
-  final AMap2DView _widget;
   final AMap _aMap;
   Geolocation _geolocation;
   MarkerOptions _markerOptions;

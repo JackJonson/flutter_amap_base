@@ -78,7 +78,7 @@ class AMap2DViewState extends State<AMap2DView> {
         _aMap.addControl(Scale());
         _aMap.addControl(ToolBar());
 
-        final AMapWebController controller = AMapWebController(_aMap, widget);
+        final AMapWebController controller = AMapWebController(_aMap);
         if (widget.onAMap2DViewCreated != null) {
           widget.onAMap2DViewCreated(controller);
         }
