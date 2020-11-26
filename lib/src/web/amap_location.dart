@@ -65,7 +65,7 @@ class AMapWebLocation extends AMapLocation {
     }, onError: (dynamic e) {
       print('初始化错误：$e');
     });
-
+    return Future.value();
   }
 
   /// 只定位一次
