@@ -22,7 +22,7 @@ class AMapWebLocation extends AMapLocation {
   Geolocation _geolocation;
   StreamController<Location> _streamController;
   Timer _timer;
-  final List<String> plugins = <String>['AMap.Geolocation'];
+  final List<String> plugins = <String>['AMap.Geolocation','AMap.ToolBar'];
 
   AMapWebLocation._();
 
@@ -44,29 +44,34 @@ class AMapWebLocation extends AMapLocation {
       plugins: plugins,
     ));
 
-    _streamController = StreamController(sync: true);
+    _streamController = StreamController.broadcast(sync: true);
 
     promiseToFuture(promise).then((value) {
       MapOptions _mapOptions = MapOptions(
         zoom: 11,
         resizeEnable: true,
+
       );
 
       /// 无法使用id https://github.com/flutter/flutter/issues/40080
       _aMap = AMap('123', _mapOptions);
 
       /// 加载插件
-      _aMap.plugin(plugins, allowInterop(() {}));
+      _aMap.plugin(plugins, allowInterop(() {
+        _aMap.addControl(ToolBar());
+        /// 定位插件初始化
+        _geolocation = Geolocation(GeolocationOptions(
+          timeout: 15000,
+          buttonPosition: 'RB',
+          buttonOffset: Pixel(10, 20),
+          zoomToAccuracy: true,
+          showMarker: false,
+          showCircle: true,
+        ));
 
-      /// 定位插件初始化
-      _geolocation = Geolocation(GeolocationOptions(
-        timeout: 15000,
-        buttonPosition: 'RB',
-        buttonOffset: Pixel(10, 20),
-        zoomToAccuracy: true,
-      ));
+        _aMap.addControl(_geolocation);
+      }));
 
-      _aMap.addControl(_geolocation);
     }, onError: (dynamic e) {
       print('初始化错误：$e');
     });

@@ -23,7 +23,11 @@ class AMap {
   external addControl(Control control);
   /// 销毁地图，并清空地图容器
   external destroy();
-
+  ///移动地图到某个点
+  external panTo(LngLat target);
+  ///获取中心点经纬度
+  external LngLat getCenter();
+  ///设置地图的事件
   external on(String eventName, void Function(MapsEvent event) callback);
 }
 
@@ -145,6 +149,12 @@ class GeolocationOptions {
     bool zoomToAccuracy,
     ///  定位按钮的排放位置,  RB表示右下 
     String buttonPosition,
+    ///定位成功后在定位到的位置显示点标记，默认：true
+    showMarker,
+    ///定位成功后用圆圈表示定位精度范围，默认：true
+    showCircle,
+    ///定位成功后将定位到的位置作为地图中心点，默认：true
+    panToLocation,
   });
 }
 
