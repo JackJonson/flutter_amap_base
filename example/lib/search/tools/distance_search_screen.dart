@@ -29,7 +29,7 @@ class _DistanceSearchScreenState extends State<DistanceSearchScreen> {
       setState(() {});
     }, onError: (e) {
       if (e is PlatformException) {
-        L.p("发生错误,错误原因${e.code}");
+        debugPrint("发生错误,错误原因${e.code}");
       }
     });
   }

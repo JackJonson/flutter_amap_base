@@ -5,6 +5,7 @@ import 'package:amap_base/src/common/log.dart';
 import 'package:amap_base/src/interface/location/amap_location.dart';
 import 'package:amap_base/src/location/model/location.dart';
 import 'package:amap_base/src/location/model/location_client_options.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 AMapLocation createLocation()=>AMapMobileLocation();
@@ -35,7 +36,7 @@ class AMapMobileLocation extends AMapLocation{
   /// 只定位一次
   @override
   Future<Location> getLocation(LocationClientOptions options) {
-    L.p('getLocation dart端参数: options.toJsonString() -> ${options.toJsonString()}');
+    debugPrint('getLocation dart端参数: options.toJsonString() -> ${options.toJsonString()}');
 
     _locationChannel.invokeMethod(
         'location#startLocate', {'options': options.toJsonString()});
@@ -50,7 +51,7 @@ class AMapMobileLocation extends AMapLocation{
   /// 开始定位, 返回定位 结果流
   @override
   Stream<Location> startLocate(LocationClientOptions options) {
-    print('startLocate dart端参数: options.toJsonString() -> ${options.toJsonString()}');
+    debugPrint('startLocate dart端参数: options.toJsonString() -> ${options.toJsonString()}');
 
     _locationChannel.invokeMethod(
         'location#startLocate', {'options': options.toJsonString()});

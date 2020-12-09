@@ -35,7 +35,7 @@ class AMapMobileController extends AMapController{
     final _styleJson =
     jsonEncode(style?.toJson() ?? MyLocationStyle().toJson());
 
-    L.p('方法setMyLocationStyle dart端参数: styleJson -> $_styleJson');
+    debugPrint('方法setMyLocationStyle dart端参数: styleJson -> $_styleJson');
     return _mapChannel.invokeMethod(
       'map#setMyLocationStyle',
       {'myLocationStyle': _styleJson},
@@ -46,7 +46,7 @@ class AMapMobileController extends AMapController{
   Future setUiSettings(UiSettings uiSettings) {
     final _uiSettings = jsonEncode(uiSettings.toJson());
 
-    L.p('方法setUiSettings dart端参数: _uiSettings -> $_uiSettings');
+    debugPrint('方法setUiSettings dart端参数: _uiSettings -> $_uiSettings');
     return _mapChannel.invokeMethod(
       'map#setUiSettings',
       {'uiSettings': _uiSettings},
@@ -58,7 +58,7 @@ class AMapMobileController extends AMapController{
     bool openAnimation = true,
   }) {
     final _optionsJson = options.toJsonString();
-    L.p('方法addMarker dart端参数: _optionsJson -> $_optionsJson');
+    debugPrint('方法addMarker dart端参数: _optionsJson -> $_optionsJson');
     return _mapChannel.invokeMethod(
       'marker#addMarker',
       {
@@ -77,7 +77,7 @@ class AMapMobileController extends AMapController{
   }) {
     final _optionsListJson =
     jsonEncode(optionsList.map((it) => it.toJson()).toList());
-    L.p('方法addMarkers dart端参数: _optionsListJson -> $_optionsListJson');
+    debugPrint('方法addMarkers dart端参数: _optionsListJson -> $_optionsListJson');
     return _mapChannel.invokeMethod(
       'marker#addMarkers',
       {
@@ -122,7 +122,7 @@ class AMapMobileController extends AMapController{
   /// 设置缩放等级
   @override
   Future setZoomLevel(int level) {
-    L.p('setZoomLevel dart端参数: level -> $level');
+    debugPrint('setZoomLevel dart端参数: level -> $level');
 
     return _mapChannel.invokeMethod(
       'map#setZoomLevel',
@@ -138,7 +138,7 @@ class AMapMobileController extends AMapController{
     double tilt = 0,
     double bearing = 0,
   }) {
-    L.p(
+    debugPrint(
         'setPosition dart端参数: target -> $target, zoom -> $zoom, tilt -> $tilt, bearing -> $bearing');
 
     return _mapChannel.invokeMethod(
@@ -170,7 +170,7 @@ class AMapMobileController extends AMapController{
     /// 经度delta [iOS]
     @required double deltaLng,
   }) {
-    L.p(
+    debugPrint(
         'setPosition dart端参数: swLatLng -> $swLatLng, neLatLng -> $neLatLng, center -> $center, deltaLat -> $deltaLat, deltaLng -> $deltaLng');
 
     return _mapChannel.invokeMethod(
@@ -188,7 +188,7 @@ class AMapMobileController extends AMapController{
   /// 添加线
   @override
   Future addPolyline(PolylineOptions options) {
-    L.p('addPolyline dart端参数: options -> $options');
+    debugPrint('addPolyline dart端参数: options -> $options');
 
     return _mapChannel.invokeMethod(
       'map#addPolyline',
@@ -205,7 +205,7 @@ class AMapMobileController extends AMapController{
     final boundJson =
     jsonEncode(bound?.map((it) => it.toJson())?.toList() ?? List());
 
-    L.p('zoomToSpan dart端参数:isMoveCenter -> $isMoveCenter, bound -> $boundJson');
+    debugPrint('zoomToSpan dart端参数:isMoveCenter -> $isMoveCenter, bound -> $boundJson');
 
     return _mapChannel.invokeMethod(
       'map#zoomToSpan',
@@ -220,7 +220,7 @@ class AMapMobileController extends AMapController{
   /// 移动指定LatLng到中心
   @override
   Future changeLatLng(LatLng target) {
-    L.p('changeLatLng dart端参数: target -> $target');
+    debugPrint('changeLatLng dart端参数: target -> $target');
 
     return _mapChannel.invokeMethod(
       'map#changeLatLng',
@@ -260,7 +260,7 @@ class AMapMobileController extends AMapController{
   /// 设置自定义样式的文件路径
   @override
   Future setCustomMapStylePath(String path) {
-    L.p('setCustomMapStylePath dart端参数: path -> $path');
+    debugPrint('setCustomMapStylePath dart端参数: path -> $path');
 
     return _mapChannel.invokeMethod(
       'map#setCustomMapStylePath',
@@ -271,7 +271,7 @@ class AMapMobileController extends AMapController{
   /// 使能自定义样式
   @override
   Future setMapCustomEnable(bool enabled) {
-    L.p('setMapCustomEnable dart端参数: enabled -> $enabled');
+    debugPrint('setMapCustomEnable dart端参数: enabled -> $enabled');
 
     return _mapChannel.invokeMethod(
       'map#setMapCustomEnable',
@@ -282,7 +282,7 @@ class AMapMobileController extends AMapController{
   /// 使用在线自定义样式
   @override
   Future setCustomMapStyleID(String styleId) {
-    L.p('setCustomMapStyleID dart端参数: styleId -> $styleId');
+    debugPrint('setCustomMapStyleID dart端参数: styleId -> $styleId');
 
     return _mapChannel.invokeMethod(
       'map#setCustomMapStyleID',

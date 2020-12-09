@@ -25,8 +25,14 @@ class AMap {
   external destroy();
   ///移动地图到某个点
   external panTo(LngLat target);
+  ///根据地图上添加的覆盖物分布情况，自动缩放地图到合适的视野级别，参数均可缺省
+  external setFitView();
   ///获取中心点经纬度
   external LngLat getCenter();
+  ///获取地图的缩放级别
+  ///获取当前地图缩放级别,在PC上，默认取值范围为[3,18]；在移动设备上，默认取值范围为[3-19]
+  ///3D地图会返回浮点数，2D视图为整数。（3D地图自V1.4.0开始支持）
+  external int getZoom();
   ///设置地图的事件
   external on(String eventName, void Function(MapsEvent event) callback);
 }
@@ -59,11 +65,21 @@ class LngLat {
 @JS()
 class Pixel {
   external Pixel(num x, num y);
+  external num getX();
+  external num getY();
 }
 
 @JS()
 class Marker {
   external Marker(MarkerOptions opts);
+  external String getAnchor();
+  external Pixel getOffset();
+  external LngLat getPosition();
+  external String getLabel();
+  external String getContent();
+  external String getTitle();
+  ///设置marker的事件
+  external on(String eventName, void Function(MapsEvent event) callback);
 }
 
 @JS()
@@ -91,10 +107,18 @@ class Size {
   external Size(num width, num height);
 }
 
+///地图事件类
 @JS()
 @anonymous
 class MapsEvent {
+  ///发生事件时光标所在处的经纬度坐标
   external LngLat get lnglat;
+  ///发生事件时光标所在处的像素坐标
+  external dynamic get target;
+  ///发生事件的目标对象，不同类型返回target不同。例如，事件对象是Marker，则target表示目标对象为Marker，事件对象是其他，则随之改变
+  external Pixel get pixel;
+  ///事件类型
+  external String get type;
 }
 
 @JS()
@@ -181,11 +205,64 @@ class IconOptions {
   });
 }
 
+///定位结果信息类
 @JS()
 @anonymous
 class GeolocationResult {
+  ///定位结果
   external LngLat get position;
+  ///精度范围，单位：米
   external String get message;
+  ///定位结果的来源，可能的值有:'html5'、'ip'、'sdk'
+  external num get accuracy;
+  ///形成当前定位结果的一些信息
+  external String get location_type;
+  ///是否经过坐标纠偏
+  external bool get isConverted;
+  ///状态信息 "SUCCESS"
+  external String get info;
+  ///地址
+  external String get formattedAddress;
+  ///地址信息，详情参考Geocoder
+  external AddressComponent get addressComponent;
+  ///定位点附近的POI信息，extensions等于'base'的时候为空
+  external List get pois;
+  ///定位点附近的道路信息，extensions等于'base'的时候为空
+  external List get roads;
+  ///定位点附近的道路交叉口信息，extensions等于'base'的时候为空
+  external List get crosses;
+}
+
+///定位结果信息中的地址相关类
+@JS()
+@anonymous
+class AddressComponent{
+  ///所在省（省编码在城市编码表中可查询到）
+  external String get province;
+  ///所在城市
+  external String get city;
+  ///所在城市编码
+  external String get citycode;
+  ///所在区
+  external String get district;
+  ///所在区域编码
+  external String get adcode;
+  ///所在乡镇
+  external String get township;
+  ///所在街道
+  external String get street;
+  ///门牌号
+  external String get streetNumber;
+  ///所在社区
+  external String get neighborhood;
+  ///社区类型
+  external String get neighborhoodType;
+  ///所在楼/大厦
+  external String get building;
+  ///楼类型
+  external String get buildingType;
+  ///仅逆地理编码时返回，所属商圈信息
+  external String get businessAreas;
 }
 
 @JS()
@@ -215,3 +292,19 @@ class Poi {
   external String get adname;
   external String get name;
 }
+
+@JS()
+@anonymous
+class GeometryUtil{
+  external static double distance(LngLat p1,LngLat p2);
+}
+
+@JS()
+@anonymous
+class ConvertorResult {
+  external List<LngLat> get locations;
+  external String get info;
+}
+
+///其他坐标点转换为高德坐标系
+external convertFrom(dynamic/*LngLat | Array<LngLat>*/ l,String type,Function(String status, ConvertorResult result) callback);

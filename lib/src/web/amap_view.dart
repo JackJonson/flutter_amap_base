@@ -85,7 +85,7 @@ class AMap2DViewState extends State<AMap2DView> {
       }));
 
     }, onError: (dynamic e) {
-      print('初始化错误：$e');
+      debugPrint('初始化错误：$e');
     });
   }
 

@@ -13,6 +13,7 @@ import 'package:amap_base/src/search/model/regeocode_result.dart';
 import 'package:amap_base/src/search/model/route_plan_param.dart';
 import 'package:amap_base/src/search/model/route_poi_result.dart';
 import 'package:amap_base/src/search/model/route_poi_search_query.dart';
+import 'package:flutter/foundation.dart';
 
 AMapSearch createSearch()=> AMapWebSearch();
 
@@ -33,7 +34,7 @@ class AMapWebSearch extends AMapSearch{
   /// 搜索poi
   @override
   Future<PoiResult> searchPoi(PoiSearchQuery query) {
-    L.p('方法searchPoi dart端参数: query.toJsonString() -> ${query.toJsonString()}');
+    debugPrint('方法searchPoi dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
     // return _searchChannel
     //     .invokeMethod('search#searchPoi', {'query': query.toJsonString()})
@@ -44,7 +45,7 @@ class AMapWebSearch extends AMapSearch{
   /// 搜索poi 周边搜索
   @override
   Future<PoiResult> searchPoiBound(PoiSearchQuery query) {
-    L.p('searchPoiBound dart端参数: query.toJsonString() -> ${query.toJsonString()}');
+    debugPrint('searchPoiBound dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
     // return _searchChannel
     //     .invokeMethod('search#searchPoiBound', {'query': query.toJsonString()})
@@ -55,7 +56,7 @@ class AMapWebSearch extends AMapSearch{
   /// 搜索poi 多边形搜索
   @override
   Future<PoiResult> searchPoiPolygon(PoiSearchQuery query) {
-    L.p('searchPoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
+    debugPrint('searchPoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
     // return _searchChannel
     //     .invokeMethod(
@@ -67,7 +68,7 @@ class AMapWebSearch extends AMapSearch{
   /// 按id搜索poi
   @override
   Future<PoiItem> searchPoiId(String id) {
-    L.p('searchPoiId dart端参数: id -> $id');
+    debugPrint('searchPoiId dart端参数: id -> $id');
 
     // return _searchChannel
     //     .invokeMethod('search#searchPoiId', {'id': id})
@@ -78,7 +79,7 @@ class AMapWebSearch extends AMapSearch{
   /// 道路沿途直线检索POI
   @override
   Future<RoutePoiResult> searchRoutePoiLine(RoutePoiSearchQuery query) {
-    L.p('searchRoutePoiLine dart端参数: query.toJsonString() -> ${query.toJsonString()}');
+    debugPrint('searchRoutePoiLine dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
     // return _searchChannel
     //     .invokeMethod(
@@ -90,7 +91,7 @@ class AMapWebSearch extends AMapSearch{
   /// 道路沿途多边形检索POI
   @override
   Future<RoutePoiResult> searchRoutePoiPolygon(RoutePoiSearchQuery query) {
-    L.p('searchRoutePoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
+    debugPrint('searchRoutePoiPolygon dart端参数: query.toJsonString() -> ${query.toJsonString()}');
 
     // return _searchChannel
     //     .invokeMethod(
@@ -103,7 +104,7 @@ class AMapWebSearch extends AMapSearch{
   @override
   Future<DriveRouteResult> calculateDriveRoute(RoutePlanParam param) {
     final _routePlanParam = param.toJsonString();
-    L.p('方法calculateDriveRoute dart端参数: _routePlanParam -> $_routePlanParam');
+    debugPrint('方法calculateDriveRoute dart端参数: _routePlanParam -> $_routePlanParam');
     // return _searchChannel
     //     .invokeMethod(
     //       'search#calculateDriveRoute',
@@ -117,7 +118,7 @@ class AMapWebSearch extends AMapSearch{
   /// 地址转坐标 [name]表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode
   @override
   Future<GeocodeResult> searchGeocode(String name, String city) {
-    L.p('方法searchGeocode dart端参数: name -> $name, cityCode -> $city');
+    debugPrint('方法searchGeocode dart端参数: name -> $name, cityCode -> $city');
 
     // return _searchChannel
     //     .invokeMethod(
@@ -135,7 +136,7 @@ class AMapWebSearch extends AMapSearch{
     double radius,
     int latLonType,
   ) {
-    L.p('方法searchReGeocode dart端参数: point -> ${point.toJsonString()}, radius -> $radius, latLonType -> $latLonType');
+    debugPrint('方法searchReGeocode dart端参数: point -> ${point.toJsonString()}, radius -> $radius, latLonType -> $latLonType');
     // return _searchChannel
     //     .invokeMethod(
     //       'search#searchReGeocode',
@@ -178,7 +179,7 @@ class AMapWebSearch extends AMapSearch{
   /// [city] 所在城市名或者城市区号
   @override
   Future<BusStationResult> searchBusStation(String stationName, String city) {
-    L.p('方法searchBusStation dart端参数: stationName -> $stationName, city -> $city');
+    debugPrint('方法searchBusStation dart端参数: stationName -> $stationName, city -> $city');
 
     // return _searchChannel
     //     .invokeMethod(

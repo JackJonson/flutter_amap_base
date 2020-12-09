@@ -3,13 +3,16 @@ import 'dart:convert';
 
 import 'package:amap_base/src/interface/map/calculate_tool.dart';
 import 'package:flutter/services.dart';
+import 'package:js/js.dart';
 import 'package:meta/meta.dart';
+import 'dart:math' as Math;
 
 import '../map/model/latlng.dart';
+import 'amapjs.dart';
 
-CalculateTools createCalculateTools()=>CalculateWebTools();
+CalculateTools createCalculateTools() => CalculateWebTools();
 
-class CalculateWebTools extends CalculateTools{
+class CalculateWebTools extends CalculateTools {
   static CalculateWebTools _instance;
 
   CalculateWebTools._();
@@ -35,32 +38,67 @@ class CalculateWebTools extends CalculateTools{
     @required double lon,
     @required LatLngType type,
   }) async {
-    int intType = LatLngType.values.indexOf(type);
-
-    // String result = await _channel.invokeMethod(
-    //   'tool#convertCoordinate',
-    //   {
-    //     'lat': lat,
-    //     'lon': lon,
-    //     'type': intType,
-    //   },
-    // );
-    //
-    // if (result == null) {
-    //   return null;
-    // }
-    //
-    // return LatLng.fromJson(jsonDecode(result));
+    Completer<LatLng> completer = Completer();
+    switch (type) {
+      case LatLngType.gps:
+        convertFrom(LngLat(lon, lat), 'gps',
+            allowInterop((status, ConvertorResult result) {
+          if (result.locations?.isNotEmpty ?? false) {
+            completer.complete(
+              LatLng(
+                result.locations[0].getLat(),
+                result.locations[0].getLng(),
+              ),
+            );
+          } else {
+            completer.completeError('convert coordinate failed');
+          }
+        }));
+        break;
+      case LatLngType.baidu:
+        convertFrom(LngLat(lon, lat), 'baidu',
+            allowInterop((status, ConvertorResult result) {
+          if (result.locations?.isNotEmpty ?? false) {
+            completer.complete(
+              LatLng(
+                result.locations[0].getLat(),
+                result.locations[0].getLng(),
+              ),
+            );
+          } else {
+            completer.completeError('convert coordinate failed');
+          }
+        }));
+        break;
+      case LatLngType.mapBar:
+        convertFrom(LngLat(lon, lat), 'mapbar',
+            allowInterop((status, ConvertorResult result) {
+          if (result.locations?.isNotEmpty ?? false) {
+            completer.complete(
+              LatLng(
+                result.locations[0].getLat(),
+                result.locations[0].getLng(),
+              ),
+            );
+          } else {
+            completer.completeError('convert coordinate failed');
+          }
+        }));
+        break;
+      default:
+        completer
+            .completeError('convert coordinate failed, unknown coordinate');
+        break;
+    }
+    return completer.future;
   }
 
   @override
   Future<double> calcDistance(LatLng latLng1, LatLng latLng2) async {
-    // Map<String, dynamic> params = {
-    //   "p1": latLng1.toJson(),
-    //   "p2": latLng2.toJson(),
-    // };
-    //
-    // double length = await _channel.invokeMethod("tool#calcDistance", params);
-    // return length;
+    double distance = GeometryUtil.distance(
+      LngLat(latLng1.longitude, latLng1.latitude),
+      LngLat(latLng2.longitude, latLng2.latitude),
+    );
+    return Future.value(distance);
   }
 }
