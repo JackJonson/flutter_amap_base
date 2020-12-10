@@ -24,10 +24,14 @@ class AMapWebNavi extends AMapNavi{
   void startNavi({
     @required double lat,
     @required double lon,
+    String title,
     int naviType = AMapNavi.drive,
   }) {
-    String url='https://uri.amap.com/navigation?from=,我的位置&to=$lon,$lat,目的地&mode=car&policy=3&src=mypage&coordinate=gaode&callnative=0';
-    launch(url);
+
+    String url='https://uri.amap.com/navigation?to=$lon,$lat,$title&mode=car&policy=3&src=mypage&coordinate=gaode&callnative=1';
+    // String url='https://uri.amap.com/marker?position=$lon,$lat&name=$title&src=智维保&coordinate=gaode&callnative=1';
+
+    launch(url,);
     // debugPrint('Navigation is not support by web js api, only show the route planning.');
   }
 }

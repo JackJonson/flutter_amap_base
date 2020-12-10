@@ -75,8 +75,8 @@ class AMap2DViewState extends State<AMap2DView> {
       _aMap = AMap(_element, _mapOptions);
       /// 加载插件
       _aMap.plugin(plugins, allowInterop(() {
-        _aMap.addControl(Scale());
-        _aMap.addControl(ToolBar());
+        // _aMap.addControl(Scale());
+        // _aMap.addControl(ToolBar());
 
         final AMapWebController controller = AMapWebController(_aMap);
         if (widget.onAMap2DViewCreated != null) {

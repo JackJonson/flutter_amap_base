@@ -22,7 +22,7 @@ class AMapWebLocation extends AMapLocation {
 
   AMap _aMap;
   Geolocation _geolocation;
-  BehaviorSubject<Location> _streamController;
+  BehaviorSubject<Location> _locationController;
   Timer _timer;
   final List<String> plugins = <String>['AMap.Geolocation', 'AMap.ToolBar'];
 
@@ -46,7 +46,7 @@ class AMapWebLocation extends AMapLocation {
       plugins: plugins,
     ));
 
-    _streamController = BehaviorSubject<Location>();
+    _locationController = BehaviorSubject<Location>();
 
     promiseToFuture(promise).then((value) {
       debugPrint('load success');
@@ -86,10 +86,21 @@ class AMapWebLocation extends AMapLocation {
   Future<Location> getLocation(LocationClientOptions options) async {
     debugPrint(
         'getLocation dart端参数: options.toJsonString() -> ${options.toJsonString()}');
-    Completer _completer = new Completer();
+    Completer<Location> _completer = new Completer();
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
-        _completer.complete(result.position);
+        _completer.complete(
+          Location(
+            latitude: result.position.getLat(),
+            longitude: result.position.getLng(),
+            city: result.addressComponent.city,
+            address: result.formattedAddress,
+            district: result.addressComponent.district,
+            province: result.addressComponent.province,
+            street: result.addressComponent.street,
+            streetNum: result.addressComponent.streetNumber,
+          ),
+        );
       } else {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
@@ -99,11 +110,7 @@ class AMapWebLocation extends AMapLocation {
       }
     }));
 
-    LngLat lat = await _completer.future;
-    return lat != null
-        ? Future.value(
-            Location(latitude: lat.getLat(), longitude: lat.getLng()))
-        : null;
+    return _completer.future;
   }
 
   /// 开始定位, 返回定位 结果流
@@ -115,30 +122,11 @@ class AMapWebLocation extends AMapLocation {
       if (!options.isOnceLocation) {
         _timer = Timer.periodic(Duration(milliseconds: options.interval),
             (timer) async {
-          _geolocation.getCurrentPosition(allowInterop((status, result) {
-            if (status == 'complete') {
-              _streamController.add(
-                Location(
-                  latitude: result.position.getLat(),
-                  longitude: result.position.getLng(),
-                  city: result.addressComponent.city,
-                  address: result.formattedAddress,
-                  district: result.addressComponent.district,
-                  province: result.addressComponent.province,
-                  street: result.addressComponent.street,
-                  streetNum: result.addressComponent.streetNumber,
-                ),
-              );
-            } else {
-              /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
-              /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
-              /// 另外还有个别浏览器（如google Chrome浏览器等）本身的定位接口是黑洞，通过其请求定位完全没有回应，也会超时返回失败。
-              debugPrint(result.message);
-            }
-          }));
+          Location location = await getLocation(options);
+          _locationController.add(location);
         });
       }
-      return _streamController.stream;
+      return _locationController.stream;
     }
     return null;
   }
@@ -147,8 +135,8 @@ class AMapWebLocation extends AMapLocation {
   @override
   Future stopLocate() {
     _timer?.cancel();
-    if (!_streamController.isClosed) {
-      _streamController.close();
+    if (!_locationController.isClosed) {
+      _locationController.close();
     }
     return Future.value();
     // return _locationChannel.invokeMethod('location#stopLocate');

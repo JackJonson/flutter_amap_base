@@ -24,6 +24,7 @@ class AMapMobileNavi extends AMapNavi{
   void startNavi({
     @required double lat,
     @required double lon,
+    String title='Destination',
     int naviType = AMapNavi.drive,
   }) {
     _channel.invokeMethod(

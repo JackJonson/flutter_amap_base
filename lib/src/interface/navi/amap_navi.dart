@@ -14,8 +14,10 @@ class AMapNavi {
   void startNavi({
     @required double lat,
     @required double lon,
+    String title,
     int naviType = drive,
   }) {
-    createNavigation().startNavi(lat: lat, lon: lon, naviType: naviType);
+    createNavigation()
+        .startNavi(lat: lat, lon: lon, title: title, naviType: naviType);
   }
 }
