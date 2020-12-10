@@ -114,18 +114,18 @@ class AMapWebController extends AMapController {
       );
     }));
 
-
     /// 定位插件初始化
     _geolocation = Geolocation(GeolocationOptions(
       timeout: 15000,
       buttonPosition: 'RB',
       buttonOffset: Pixel(10, 20),
-      zoomToAccuracy: true,
+      zoomToAccuracy: false,
     ));
 
     _aMap.addControl(_geolocation);
-    _aMap.addControl(ToolBar());
-    location();
+    // _aMap.addControl(ToolBar());
+    // 取消进入地图获取定位功能，如需使用，使用amap_location工具类定位
+    // location();
   }
 
   onMarkerClick(MapsEvent event) {
@@ -142,8 +142,9 @@ class AMapWebController extends AMapController {
   Future<void> location() async {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
-        _aMap.setZoom(17);
-        _aMap.setCenter(result.position);
+        // _aMap.setZoom(17);
+        debugPrint('location:${result.position}');
+        // _aMap.setCenter(result.position);
       } else {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
@@ -162,27 +163,13 @@ class AMapWebController extends AMapController {
     return Future.value();
   }
 
-  Future<void> move(String lat, String lon) async {
-    final LngLat lngLat = LngLat(double.parse(lon), double.parse(lat));
-    _aMap.setCenter(lngLat);
-    // if (_markerOptions == null) {
-    //   _markerOptions = MarkerOptions(
-    //       position: lngLat,
-    //       icon: AMapIcon(IconOptions(
-    //         size: Size(26, 34),
-    //         imageSize: Size(26, 34),
-    //         image:
-    //             'https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
-    //       )),
-    //       offset: Pixel(-13, -34),
-    //       anchor: 'bottom-center');
-    // } else {
-    //   _markerOptions.position = lngLat;
-    // }
-    _aMap.clearMap();
-    _aMap.add(Marker(_markerOptions));
-    return Future.value();
-  }
+  // Future<void> move(String lat, String lon) async {
+  //   final LngLat lngLat = LngLat(double.parse(lon), double.parse(lat));
+  //   _aMap.setCenter(lngLat);
+  //   _aMap.clearMap();
+  //   _aMap.add(Marker(_markerOptions));
+  //   return Future.value();
+  // }
 
   /// 根据经纬度搜索
   void searchNearBy(LngLat lngLat) {
@@ -220,7 +207,7 @@ class AMapWebController extends AMapController {
         /// 默认点移动到搜索结果的第一条
         if (list.isNotEmpty) {
           _aMap.setZoom(17);
-          move(list[0].latitude, list[0].longitude);
+          // move(list[0].latitude, list[0].longitude);
         }
 
         // if (_widget.onPoiSearched != null) {
@@ -333,12 +320,13 @@ class AMapWebController extends AMapController {
         position: LngLat(options.position.longitude, options.position.latitude),
         icon: AMapIcon(
           IconOptions(
-              image: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
+              imageSize: Size(36, 36),
+              image: options.icon ??
+                  "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
         ),
       ),
     );
     marker.on('click', allowInterop(onMarkerClick));
-    _aMap.clearMap();
     _aMap.add(marker);
   }
 
@@ -358,7 +346,8 @@ class AMapWebController extends AMapController {
           position: LngLat(op.position.longitude, op.position.latitude),
           icon: AMapIcon(
             IconOptions(
-                image:
+                imageSize: Size(36, 36),
+                image: op.icon ??
                     "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
           ),
         ),
@@ -366,7 +355,9 @@ class AMapWebController extends AMapController {
       marker.on('click', allowInterop(onMarkerClick));
       mpList.add(marker);
     }
-    _aMap.clearMap();
+    if(clear){
+      _aMap.clearMap();
+    }
     _aMap.add(mpList);
   }
 
