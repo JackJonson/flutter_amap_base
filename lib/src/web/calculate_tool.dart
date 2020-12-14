@@ -41,7 +41,7 @@ class CalculateWebTools extends CalculateTools {
     Completer<LatLng> completer = Completer();
     switch (type) {
       case LatLngType.gps:
-        convertFrom(LngLat(lon, lat), 'gps',
+        convertFrom(LngLat(lon, lat,false), 'gps',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -56,7 +56,7 @@ class CalculateWebTools extends CalculateTools {
         }));
         break;
       case LatLngType.baidu:
-        convertFrom(LngLat(lon, lat), 'baidu',
+        convertFrom(LngLat(lon, lat,false), 'baidu',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -71,7 +71,7 @@ class CalculateWebTools extends CalculateTools {
         }));
         break;
       case LatLngType.mapBar:
-        convertFrom(LngLat(lon, lat), 'mapbar',
+        convertFrom(LngLat(lon, lat,false), 'mapbar',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -96,8 +96,8 @@ class CalculateWebTools extends CalculateTools {
   @override
   Future<double> calcDistance(LatLng latLng1, LatLng latLng2) async {
     double distance = GeometryUtil.distance(
-      LngLat(latLng1.longitude, latLng1.latitude),
-      LngLat(latLng2.longitude, latLng2.latitude),
+      LngLat(latLng1.longitude, latLng1.latitude,false),
+      LngLat(latLng2.longitude, latLng2.latitude,false),
     );
     return Future.value(distance);
   }

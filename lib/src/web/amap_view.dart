@@ -104,9 +104,10 @@ class AMap2DViewState extends State<AMap2DView> {
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(_divId, (int viewId) {
       _element = DivElement()
-        ..style.width = '100%'
-        ..style.height = '100%'
-        ..style.margin = '0';
+      //   ..style.width = '100%'
+      //   ..style.height = '100%'
+      //   ..style.margin = '0'
+      ;
 
       return _element;
     });

@@ -57,7 +57,7 @@ class PlaceSearch {
 
 @JS()
 class LngLat {
-  external LngLat(num lng, num lat);
+  external LngLat(num lng, num lat, bool noAutofix);
   external num getLng();
   external num getLat();
 }

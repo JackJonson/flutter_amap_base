@@ -39,58 +39,46 @@ class AMapWebController extends AMapController {
     _markerController = BehaviorSubject<MarkerOptionsN.MarkerOptions>();
 
     ///触摸事件-开始
-    _aMap.on('touchstart', allowInterop((event) {
+    _aMap.on('dragstart', allowInterop((event) {
       _touchController.add(
         TouchEvent(
           TouchEvent.ACTION_DOWN,
-          event.pixel.getX(),
-          event.pixel.getY(),
-          event.pixel.getX(),
-          event.pixel.getY(),
+          null,
+          null,
+          null,
+          null,
         ),
       );
     }));
 
     ///触摸事件-移动
-    _aMap.on('touchmove', allowInterop((event) {
+    _aMap.on('dragging', allowInterop((event) {
       _touchController.add(
         TouchEvent(
           TouchEvent.ACTION_MOVE,
-          event?.pixel?.getX(),
-          event?.pixel?.getY(),
-          event?.pixel?.getX(),
-          event?.pixel?.getY(),
+          null,
+          null,
+          null,
+          null,
         ),
       );
     }));
 
     ///触摸事件-结束
-    _aMap.on('touchend', allowInterop((event) {
+    _aMap.on('dragend', allowInterop((event) {
       _touchController.add(
         TouchEvent(
           TouchEvent.ACTION_UP,
-          event.pixel.getX(),
-          event.pixel.getY(),
-          event.pixel.getX(),
-          event.pixel.getY(),
+          null,
+          null,
+          null,
+          null,
         ),
       );
     }));
 
     ///移动事件-开始
     _aMap.on('movestart', allowInterop((event) {
-      _cameraController.add(
-        CameraPosition(
-          target: LatLng(
-            _aMap.getCenter().getLat(),
-            _aMap.getCenter().getLng(),
-          ),
-          zoom: _aMap.getZoom().toDouble(),
-        ),
-      );
-    }));
-
-    _aMap.on('mapmove', allowInterop((event) {
       _cameraController.add(
         CameraPosition(
           target: LatLng(
@@ -129,6 +117,7 @@ class AMapWebController extends AMapController {
   }
 
   onMarkerClick(MapsEvent event) {
+    print('onMarkerClick event.target:${event.target.getPosition().getLat()}');
     Marker op = event.target;
     _markerController.add(
       MarkerOptionsN.MarkerOptions(
@@ -304,7 +293,7 @@ class AMapWebController extends AMapController {
     // TODO: implement zoomToSpan
     List<LngLat> overlayList = [];
     for (LatLng l in bound) {
-      overlayList.add(LngLat(l.longitude, l.latitude));
+      overlayList.add(LngLat(l.longitude, l.latitude,false));
     }
     // _aMap.setFitView(overlayList, false, [], 17);
     _aMap.setFitView();
@@ -317,7 +306,7 @@ class AMapWebController extends AMapController {
     Marker marker = Marker(
       MarkerOptions(
         map: _aMap,
-        position: LngLat(options.position.longitude, options.position.latitude),
+        position: LngLat(options.position.longitude,options.position.latitude,false),
         icon: AMapIcon(
           IconOptions(
               imageSize: Size(36, 36),
@@ -326,7 +315,18 @@ class AMapWebController extends AMapController {
         ),
       ),
     );
-    marker.on('click', allowInterop(onMarkerClick));
+    ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
+    marker.on('touchstart', allowInterop((MapsEvent event) {
+      print('onMarkerClick event.target:${event.target.getPosition().getLat()}');
+      Marker op = event.target;
+      _markerController.add(
+        MarkerOptionsN.MarkerOptions(
+          position: LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
+          title: op.getTitle(),
+          snippet: op.getContent(),
+        ),
+      );
+    }));
     _aMap.add(marker);
   }
 
@@ -340,10 +340,11 @@ class AMapWebController extends AMapController {
     List<Marker> mpList = [];
     Marker marker;
     for (MarkerOptionsN.MarkerOptions op in optionsList) {
+      print('marker latlon:${op.position.longitude},${op.position.latitude}');
       marker = Marker(
         MarkerOptions(
           map: _aMap,
-          position: LngLat(op.position.longitude, op.position.latitude),
+          position: LngLat(op.position.longitude,op.position.latitude,false),
           icon: AMapIcon(
             IconOptions(
                 imageSize: Size(36, 36),
@@ -352,12 +353,23 @@ class AMapWebController extends AMapController {
           ),
         ),
       );
-      marker.on('click', allowInterop(onMarkerClick));
+      ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
+      marker.on('touchstart', allowInterop((MapsEvent event) {
+        print('onMarkerClick event.target:${event.target.getPosition().getLat()}');
+        Marker op = event.target;
+        _markerController.add(
+          MarkerOptionsN.MarkerOptions(
+            position: LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
+            title: op.getTitle(),
+            snippet: op.getContent(),
+          ),
+        );
+      }));
       mpList.add(marker);
     }
-    if(clear){
-      _aMap.clearMap();
-    }
+    // if(clear){
+    //   _aMap.clearMap();
+    // }
     _aMap.add(mpList);
   }
 
@@ -376,7 +388,7 @@ class AMapWebController extends AMapController {
   @override
   Future changeLatLng(LatLng target) async {
     // TODO: implement changeLatLng
-    _aMap.panTo(LngLat(target.longitude, target.latitude));
+    _aMap.setCenter(LngLat(target.longitude, target.latitude,false));
   }
 
   @override
