@@ -26,6 +26,8 @@ class AMapWebLocation extends AMapLocation {
   Timer _timer;
   final List<String> plugins = <String>['AMap.Geolocation', 'AMap.ToolBar'];
 
+  Geolocation get geoLocation=>_geolocation;
+
   AMapWebLocation._() {}
 
   factory AMapWebLocation() {
@@ -68,8 +70,18 @@ class AMapWebLocation extends AMapLocation {
           buttonPosition: 'RB',
           buttonOffset: Pixel(10, 20),
           zoomToAccuracy: true,
-          showMarker: false,
-          showCircle: true,
+          showMarker: true,
+          panToLocation: true,
+          markerOptions: MarkerOptions(
+            offset: Pixel(-36, -36),
+            anchor: 'bottom-center',
+            icon: AMapIcon(
+              IconOptions(
+                  imageSize: Size(36, 36),
+                  image:
+                  'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
+            ),
+          ),
         ));
 
         _aMap.addControl(_geolocation);

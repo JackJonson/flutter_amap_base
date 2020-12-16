@@ -6,7 +6,7 @@ import 'package:js/js.dart';
 /// 高德地图js，文档：https://lbs.amap.com/api/javascript-api/guide/abc/prepare
 @JS('Map')
 class AMap {
-  external AMap(dynamic /*String|DivElement*/ div, MapOptions opts);
+  external AMap(dynamic /*String|DivElement*/ container, MapOptions opts);
   /// 设置中心点 
   external setCenter(LngLat center);
   /// 设置地图显示的缩放级别，参数 zoom 可设范围：[2, 20]
@@ -57,9 +57,11 @@ class PlaceSearch {
 
 @JS()
 class LngLat {
-  external LngLat(num lng, num lat, bool noAutofix);
+  external LngLat(num lng, num lat);
   external num getLng();
   external num getLat();
+  external bool equals(LngLat lngLat);
+  external String toString();
 }
 
 @JS()
@@ -174,11 +176,13 @@ class GeolocationOptions {
     ///  定位按钮的排放位置,  RB表示右下 
     String buttonPosition,
     ///定位成功后在定位到的位置显示点标记，默认：true
-    showMarker,
+    bool showMarker,
     ///定位成功后用圆圈表示定位精度范围，默认：true
-    showCircle,
+    bool showCircle,
     ///定位成功后将定位到的位置作为地图中心点，默认：true
-    panToLocation,
+    bool panToLocation,
+    ///定位成功后定位位置marker配置
+    MarkerOptions markerOptions,
   });
 }
 

@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:amap_base/src/interface/navi/amap_navi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +32,7 @@ class AMapWebNavi extends AMapNavi{
 
     String url='https://uri.amap.com/navigation?to=$lon,$lat,$title&mode=car&policy=3&src=mypage&coordinate=gaode&callnative=1';
     // String url='https://uri.amap.com/marker?position=$lon,$lat&name=$title&src=智维保&coordinate=gaode&callnative=1';
-
+    // html.window.open(url,'导航');打开新tab页跳转高德导航界面
     launch(url,);
     // debugPrint('Navigation is not support by web js api, only show the route planning.');
   }

@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:amap_base/src/interface/map/calculate_tool.dart';
-import 'package:flutter/services.dart';
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
-import 'dart:math' as Math;
 
 import '../map/model/latlng.dart';
 import 'amapjs.dart';
@@ -41,7 +38,7 @@ class CalculateWebTools extends CalculateTools {
     Completer<LatLng> completer = Completer();
     switch (type) {
       case LatLngType.gps:
-        convertFrom(LngLat(lon, lat,false), 'gps',
+        convertFrom(LngLat(lon, lat), 'gps',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -56,7 +53,7 @@ class CalculateWebTools extends CalculateTools {
         }));
         break;
       case LatLngType.baidu:
-        convertFrom(LngLat(lon, lat,false), 'baidu',
+        convertFrom(LngLat(lon, lat), 'baidu',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -71,7 +68,7 @@ class CalculateWebTools extends CalculateTools {
         }));
         break;
       case LatLngType.mapBar:
-        convertFrom(LngLat(lon, lat,false), 'mapbar',
+        convertFrom(LngLat(lon, lat), 'mapbar',
             allowInterop((status, ConvertorResult result) {
           if (result.locations?.isNotEmpty ?? false) {
             completer.complete(
@@ -96,8 +93,8 @@ class CalculateWebTools extends CalculateTools {
   @override
   Future<double> calcDistance(LatLng latLng1, LatLng latLng2) async {
     double distance = GeometryUtil.distance(
-      LngLat(latLng1.longitude, latLng1.latitude,false),
-      LngLat(latLng2.longitude, latLng2.latitude,false),
+      LngLat(latLng1.longitude, latLng1.latitude),
+      LngLat(latLng2.longitude, latLng2.latitude),
     );
     return Future.value(distance);
   }
