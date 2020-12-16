@@ -151,7 +151,7 @@ class MarkerOptions {
     AMap map,
     /// 点标记在地图上显示的位置
     LngLat position,
-    AMapIcon icon,
+    dynamic icon,
     String title,
     Pixel offset,
     String anchor,

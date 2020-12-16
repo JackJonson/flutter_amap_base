@@ -150,6 +150,12 @@ class AMapWebController extends AMapController {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
         _aMap.setZoom(17);
+        _aMap.add(Marker(
+          MarkerOptions(
+            position: LngLat(result.position.getLng()+0.0038, result.position.getLat()+0.0039),
+            anchor: 'bottom-center',
+          ),
+        ));
         // debugPrint('location:${result.position}');
         // _aMap.setCenter(result.position);
       } else {
