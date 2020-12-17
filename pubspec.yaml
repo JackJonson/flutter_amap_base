@@ -13,7 +13,7 @@ dependencies:
   flutter_plugin_android_lifecycle: ^1.0.0
   rxdart: '0.24.1'
   js: ^0.6.2
-  url_launcher: '5.1.4'
+  url_launcher: '5.5.0'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
