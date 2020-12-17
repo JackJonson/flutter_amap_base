@@ -20,6 +20,7 @@ import 'amapjs.dart';
 class AMapWebController extends AMapController {
   final AMap _aMap;
   Geolocation _geolocation;
+  List<Marker> markerList = [];
   PlaceSearchOptions _placeSearchOptions;
   BehaviorSubject<TouchEvent> _touchController;
   BehaviorSubject<CameraPosition> _cameraController;
@@ -150,12 +151,6 @@ class AMapWebController extends AMapController {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
         _aMap.setZoom(17);
-        _aMap.add(Marker(
-          MarkerOptions(
-            position: LngLat(result.position.getLng()+0.0038, result.position.getLat()+0.0039),
-            anchor: 'bottom-center',
-          ),
-        ));
         // debugPrint('location:${result.position}');
         // _aMap.setCenter(result.position);
       } else {
@@ -329,6 +324,7 @@ class AMapWebController extends AMapController {
     // TODO: implement addMarker
     Marker marker = Marker(
       MarkerOptions(
+        offset: Pixel(-36, -36),
         position: LngLat(options.position.longitude, options.position.latitude),
         icon: AMapIcon(
           IconOptions(
@@ -339,7 +335,6 @@ class AMapWebController extends AMapController {
         anchor: 'bottom-center',
       ),
     );
-
     ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
     marker.on('touchstart', allowInterop((MapsEvent event) {
       print(
@@ -363,13 +358,19 @@ class AMapWebController extends AMapController {
       bool clear = false,
       bool clearLast = false,
       bool openAnimation = true}) async {
-    // TODO: implement addMarkers
-    List<Marker> mpList = [];
-    Marker marker;
+
+    if(clearLast&&(markerList?.isNotEmpty??false)){
+      _aMap.remove(markerList);
+    }
+    if (clear) {
+      markerList.clear();
+      _aMap.clearMap();
+    }
+
     for (MarkerOptionsN.MarkerOptions op in optionsList) {
-      print('marker latlon:${op.position.longitude},${op.position.latitude}');
-      marker = Marker(
+      Marker marker = Marker(
         MarkerOptions(
+          offset: Pixel(-36, -36),
           position: LngLat(op.position.longitude, op.position.latitude),
           icon: AMapIcon(
             IconOptions(
@@ -380,7 +381,8 @@ class AMapWebController extends AMapController {
           anchor: 'bottom-center',
         ),
       );
-
+      // marker.setPosition(LngLat(op.position.longitude, op.position.latitude),);
+      debugPrint('marker getPosition:${marker.getPosition().toString()}');
       ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
       marker.on('touchstart', allowInterop((MapsEvent event) {
         print(
@@ -395,12 +397,9 @@ class AMapWebController extends AMapController {
           ),
         );
       }));
-      mpList.add(marker);
+      markerList.add(marker);
     }
-    if (clear) {
-      _aMap.clearMap();
-    }
-    _aMap.add(mpList);
+    _aMap.add(markerList);
   }
 
   @override

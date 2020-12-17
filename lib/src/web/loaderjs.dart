@@ -9,7 +9,6 @@ external load(LoaderOptions options);
 @JS()
 @anonymous
 class LoaderOptions {
-
   external factory LoaderOptions({
     ///您申请的key值
     String key,
@@ -17,5 +16,24 @@ class LoaderOptions {
     String version,
     //同步加载的插件列表 (https://lbs.amap.com/api/jsapi-v2/guide/abc/plugins)
     List<String> plugins,
+    AMapUI aMapUI,
+    Loca loca,
+  });
+}
+
+@JS()
+@anonymous
+class AMapUI {
+  external factory AMapUI({
+    String version,
+    List<String> plugins,
+  });
+}
+
+@JS()
+@anonymous
+class Loca {
+  external factory Loca({
+    String version,
   });
 }

@@ -91,8 +91,7 @@ class AMap2DViewState extends State<AMap2DView> {
 
   @override
   void dispose() {
-    _aMap.destroy();
-    _aMap = null;
+    _aMap?.destroy();
     super.dispose();
   }
 

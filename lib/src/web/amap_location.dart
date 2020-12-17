@@ -117,6 +117,8 @@ class AMapWebLocation extends AMapLocation {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
         /// 另外还有个别浏览器（如google Chrome浏览器等）本身的定位接口是黑洞，通过其请求定位完全没有回应，也会超时返回失败。
+        ///
+        ///TODO: 删除这里的测试数据
         _completer.complete(
           Location(
             latitude: 30.137975,
