@@ -417,7 +417,7 @@ class AMapWebController extends AMapController {
   @override
   Future changeLatLng(LatLng target) async {
     // TODO: implement changeLatLng
-    _aMap.panTo(LngLat(target.longitude, target.latitude));
+    _aMap.setCenter(LngLat(target.longitude, target.latitude));
   }
 
   @override

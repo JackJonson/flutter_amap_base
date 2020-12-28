@@ -118,6 +118,8 @@ class Marker {
 
   external String getTitle();
 
+  external String setMap(AMap map);
+
   ///设置marker的事件
   external on(String eventName, void Function(MapsEvent event) callback);
 }
@@ -174,6 +176,9 @@ class MapOptions {
 
     /// 地图显示的缩放级别
     num zoom,
+
+    ///是否开启地图热点和标注的hover效果。PC端默认是true，移动端默认是false
+    bool isHotspot,
 
     /// 地图视图模式, 默认为‘2D’
     String /*‘2D’|‘3D’*/ viewMode,

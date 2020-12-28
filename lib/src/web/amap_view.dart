@@ -70,6 +70,7 @@ class AMap2DViewState extends State<AMap2DView> {
       MapOptions _mapOptions = MapOptions(
         zoom: 11,
         resizeEnable: true,
+        isHotspot: false,
       );
       /// 无法使用id https://github.com/flutter/flutter/issues/40080
       _aMap = AMap(_element, _mapOptions);
