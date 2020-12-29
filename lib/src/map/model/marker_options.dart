@@ -92,6 +92,14 @@ class MarkerOptions {
   /// 显示在默认弹出框右侧的view [iOS暂未实现]
   String rightCalloutAccessoryView;
 
+  ///Support web use
+  ///现阶段web端直接使用marker会有问题，所以使用的是CircleMarker
+  ///改参数就是circleMarker的颜色
+  String markerFillColor;
+
+  ///Id of this marker
+  String markerId;
+
   MarkerOptions({
     @required this.position,
     this.icon,
@@ -122,6 +130,8 @@ class MarkerOptions {
     this.selected = false,
     this.leftCalloutAccessoryView,
     this.rightCalloutAccessoryView,
+    this.markerFillColor,
+    this.markerId,
   });
 
   MarkerOptions.fromJson(Map<String, Object> json) {

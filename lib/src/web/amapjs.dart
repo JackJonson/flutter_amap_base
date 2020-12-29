@@ -197,7 +197,7 @@ class MarkerOptions {
   external factory MarkerOptions({
     /// 要显示该marker的地图对象
     AMap map,
-
+    dynamic content,
     /// 点标记在地图上显示的位置
     dynamic position,
     dynamic icon,
@@ -214,6 +214,9 @@ class MarkerOptions {
 @JS()
 class Circle {
   external Circle(CircleOptions opt);
+
+  ///设置覆盖物的事件
+  external on(String eventName, void Function(MapsEvent event) callback);
 }
 
 @JS()
@@ -238,6 +241,41 @@ class CircleOptions {
   external void setCenter(LngLat lnglat);
 
   external LngLat getCenter(LngLat v);
+}
+
+@JS()
+class CircleMarker {
+  external CircleMarker(CircleMarkerOptions opt);
+
+  external LngLat getCenter();
+  ///设置覆盖物的事件
+  external on(String eventName, void Function(MapsEvent event) callback);
+}
+
+@JS()
+@anonymous
+class CircleMarkerOptions {
+  external factory CircleMarkerOptions({
+    /// 要显示该marker的地图对象
+    AMap map,
+
+    /// 点标记在地图上显示的位置
+    dynamic center,
+    num radius,
+    String strokeColor,
+    double strokeOpacity,
+    num strokeWeight,
+    String fillColor,
+    double fillOpacity,
+    String strokeStyle,
+    dynamic extData,
+  });
+
+  external void setCenter(LngLat lnglat);
+
+  external LngLat getCenter(LngLat v);
+
+  external dynamic get extData;
 }
 
 @JS()

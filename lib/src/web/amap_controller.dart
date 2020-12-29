@@ -20,7 +20,7 @@ import 'amapjs.dart';
 class AMapWebController extends AMapController {
   final AMap _aMap;
   Geolocation _geolocation;
-  List<Marker> markerList = [];
+  List<CircleMarker> markerList = [];
   PlaceSearchOptions _placeSearchOptions;
   BehaviorSubject<TouchEvent> _touchController;
   BehaviorSubject<CameraPosition> _cameraController;
@@ -103,6 +103,17 @@ class AMapWebController extends AMapController {
       );
     }));
 
+    // _aMap.on('zoomchange', allowInterop((event) {
+    //   debugPrint('zoomChange');
+    //   if(markerList?.isNotEmpty??false){
+    //     for(Marker marker in markerList){
+    //       _aMap.remove(marker);
+    //       marker.setPosition(marker.getPosition());
+    //       _aMap.add(marker);
+    //     }
+    //   }
+    // },),);
+
     /// 定位插件初始化
     /// 加载插件
     _aMap.plugin('AMap.Geolocation', allowInterop(() {
@@ -115,16 +126,16 @@ class AMapWebController extends AMapController {
           zoomToAccuracy: true,
           showMarker: true,
           panToLocation: true,
-          markerOptions: MarkerOptions(
-            offset: Pixel(-36, -36),
-            anchor: 'bottom-center',
-            icon: AMapIcon(
-              IconOptions(
-                  imageSize: Size(36, 36),
-                  image:
-                  'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
-            ),
-          ),
+          // markerOptions: MarkerOptions(
+          //   offset: Pixel(-36, -36),
+          //   anchor: 'bottom-center',
+          //   icon: AMapIcon(
+          //     IconOptions(
+          //         imageSize: Size(36, 36),
+          //         image:
+          //         'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
+          //   ),
+          // ),
         ),
       );
       _aMap.addControl(_geolocation);
@@ -335,6 +346,7 @@ class AMapWebController extends AMapController {
         anchor: 'bottom-center',
       ),
     );
+
     ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
     marker.on('touchstart', allowInterop((MapsEvent event) {
       print(
@@ -358,9 +370,12 @@ class AMapWebController extends AMapController {
       bool clear = false,
       bool clearLast = false,
       bool openAnimation = true}) async {
-
-    if(clearLast&&(markerList?.isNotEmpty??false)){
-      _aMap.remove(markerList);
+    if (clearLast && (markerList?.isNotEmpty ?? false)) {
+      for (CircleMarker m in markerList) {
+        _aMap.remove(m);
+      }
+      markerList.clear();
+      // _aMap.remove(markerList);
     }
     if (clear) {
       markerList.clear();
@@ -368,38 +383,67 @@ class AMapWebController extends AMapController {
     }
 
     for (MarkerOptionsN.MarkerOptions op in optionsList) {
-      Marker marker = Marker(
-        MarkerOptions(
-          offset: Pixel(-36, -36),
-          position: LngLat(op.position.longitude, op.position.latitude),
-          icon: AMapIcon(
-            IconOptions(
-                imageSize: Size(36, 36),
-                image: op.icon ??
-                    "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
-          ),
-          anchor: 'bottom-center',
+      // Marker marker = Marker(
+      //   MarkerOptions(
+      //     map: _aMap,
+      //     offset: Pixel(-36, -36),
+      //     position: LngLat(op.position.longitude, op.position.latitude),
+      //     icon: AMapIcon(
+      //       IconOptions(
+      //           imageSize: Size(36, 36),
+      //           image: op.icon ??
+      //               "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
+      //     ),
+      //     anchor: 'bottom-center',
+      //   ),
+      // );
+      // marker.setPosition(LngLat(op.position.longitude, op.position.latitude),);
+      CircleMarker circle = CircleMarker(
+        CircleMarkerOptions(
+          center: LngLat(op.position.longitude, op.position.latitude),
+          radius: 7,
+          //半径
+          strokeColor: "#FFFFFF",
+          //线颜色
+          strokeOpacity: 1,
+          //线透明度
+          strokeWeight: 3,
+          //线粗细度
+          fillColor: op.markerFillColor ?? "#589afa",
+          //填充颜色
+          fillOpacity: 1,
+          extData: op.markerId,
         ),
       );
-      // marker.setPosition(LngLat(op.position.longitude, op.position.latitude),);
-      debugPrint('marker getPosition:${marker.getPosition().toString()}');
-      ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
-      marker.on('touchstart', allowInterop((MapsEvent event) {
-        print(
-            'onMarkerClick event.target:${event.target.getPosition().getLat()}');
-        Marker op = event.target;
+      _aMap.add(circle);
+      circle.on('click', allowInterop((MapsEvent event) {
+        print('onMarkerClick event.target:${event.lnglat.getLat()}');
+        CircleMarker op = event.target;
         _markerController.add(
           MarkerOptionsN.MarkerOptions(
-            position:
-                LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
-            title: op.getTitle(),
-            snippet: op.getContent(),
+            position: LatLng(op.getCenter().getLat(), op.getCenter().getLng()),
           ),
         );
       }));
-      markerList.add(marker);
+      markerList.add(circle);
+      // debugPrint('marker getPosition:${marker.getPosition().toString()}');
+      ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
+      // marker.on('touchstart', allowInterop((MapsEvent event) {
+      //   print(
+      //       'onMarkerClick event.target:${event.target.getPosition().getLat()}');
+      //   Marker op = event.target;
+      //   _markerController.add(
+      //     MarkerOptionsN.MarkerOptions(
+      //       position:
+      //           LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
+      //       title: op.getTitle(),
+      //       snippet: op.getContent(),
+      //     ),
+      //   );
+      // }));
+      // markerList.add(marker);
     }
-    _aMap.add(markerList);
+    // _aMap.add(markerList);
   }
 
   @override

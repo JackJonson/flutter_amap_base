@@ -73,14 +73,12 @@ class AMapWebLocation extends AMapLocation {
           showMarker: true,
           panToLocation: true,
           markerOptions: MarkerOptions(
-            offset: Pixel(-36, -36),
-            anchor: 'bottom-center',
-            icon: AMapIcon(
-              IconOptions(
-                  imageSize: Size(36, 36),
-                  image:
-                  'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
-            ),
+            // icon: AMapIcon(
+            //   IconOptions(
+            //       imageSize: Size(36, 36),
+            //       image:
+            //       'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
+            // ),
           ),
         ));
 
