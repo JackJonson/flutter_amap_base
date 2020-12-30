@@ -70,16 +70,16 @@ class AMapWebLocation extends AMapLocation {
           buttonPosition: 'RB',
           buttonOffset: Pixel(10, 20),
           zoomToAccuracy: true,
-          showMarker: true,
+          showMarker: false,
           panToLocation: true,
-          markerOptions: MarkerOptions(
-            // icon: AMapIcon(
-            //   IconOptions(
-            //       imageSize: Size(36, 36),
-            //       image:
-            //       'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
-            // ),
-          ),
+          circleOptions: CircleOptions(
+            radius: 50,
+            fillColor: '#4398fd',
+            fillOpacity: 0.1,
+            strokeWeight: 0.5,
+            strokeColor: '#4398fd',
+            strokeStyle:'solid',
+          )
         ));
 
         _aMap.addControl(_geolocation);

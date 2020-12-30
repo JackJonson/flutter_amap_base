@@ -120,23 +120,31 @@ class AMapWebController extends AMapController {
       /// 定位插件初始化
       _geolocation = Geolocation(
         GeolocationOptions(
-          timeout: 15000,
-          buttonPosition: 'RB',
-          buttonOffset: Pixel(10, 20),
-          zoomToAccuracy: true,
-          showMarker: true,
-          panToLocation: true,
-          // markerOptions: MarkerOptions(
-          //   offset: Pixel(-36, -36),
-          //   anchor: 'bottom-center',
-          //   icon: AMapIcon(
-          //     IconOptions(
-          //         imageSize: Size(36, 36),
-          //         image:
-          //         'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
-          //   ),
-          // ),
-        ),
+            timeout: 15000,
+            buttonPosition: 'RB',
+            buttonOffset: Pixel(10, 20),
+            zoomToAccuracy: true,
+            showMarker: false,
+            panToLocation: true,
+            circleOptions: CircleOptions(
+              radius: 50,
+              fillColor: '#4398fd',
+              fillOpacity: 0.1,
+              strokeWeight: 0.5,
+              strokeColor: '#4398fd',
+              strokeStyle: 'solid',
+            )
+            // markerOptions: MarkerOptions(
+            //   offset: Pixel(-36, -36),
+            //   anchor: 'bottom-center',
+            //   icon: AMapIcon(
+            //     IconOptions(
+            //         imageSize: Size(36, 36),
+            //         image:
+            //         'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
+            //   ),
+            // ),
+            ),
       );
       _aMap.addControl(_geolocation);
       location();
