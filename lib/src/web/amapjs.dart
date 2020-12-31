@@ -454,6 +454,8 @@ class Poi {
   external String get adname;
 
   external String get name;
+
+  external String get address;
 }
 
 @JS()

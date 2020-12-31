@@ -82,6 +82,8 @@ class AMapWebSearch extends AMapSearch {
                   provinceName: poi.pname,
                   provinceCode: poi.pcode,
                   adName: poi.adname,
+                  title: poi.name,
+                  snippet: poi.address,
                   latLonPoint:
                       LatLng(poi.location.getLat(), poi.location.getLng())));
             }
