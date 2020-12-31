@@ -10,8 +10,8 @@ AMapLocation createAMapLocation() => createLocation();
 
 class AMapLocation {
   /// 初始化
-  Future init() {
-    return createAMapLocation().init();
+  Future init({String key}) {
+    return createAMapLocation().init(key:key);
   }
 
   /// 只定位一次
