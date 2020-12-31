@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 
 import 'package:amap_base/src/amap_view.dart';
 import 'package:amap_base/src/map/model/amap_options.dart';
+import 'package:amap_base/src/web/amap.dart';
 import 'package:amap_base/src/web/amap_controller.dart';
 import 'package:amap_base/src/web/amapjs.dart';
 import 'package:amap_base/src/web/loaderjs.dart';
@@ -25,7 +26,7 @@ Widget buildTargetAMapView({
   AMapOptions aMapOptions = const AMapOptions(),
 }) =>
     AMap2DView(
-      webKey: '4e479545913a3a180b3cffc267dad646',
+      webKey: AMapWeb().key,
       onAMap2DViewCreated:onAMapViewCreated,
     );
 

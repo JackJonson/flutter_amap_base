@@ -29,7 +29,7 @@ class AMapMobileLocation extends AMapLocation{
 
   /// 初始化
   @override
-  Future init() {
+  Future init({String key}) {
     return _locationChannel.invokeMethod('location#init');
   }
 

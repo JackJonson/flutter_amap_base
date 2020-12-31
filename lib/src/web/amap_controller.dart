@@ -17,24 +17,17 @@ import 'package:rxdart/rxdart.dart';
 
 import 'amapjs.dart';
 
+///Flutter web DomCanvas绘制引擎绘制marker时会出现缩放地图后marker移动到地图中心点的情况
+///所以web端添加的marker暂时都为CircleMarker，定位成功后暂时不添加的marker
 class AMapWebController extends AMapController {
   final AMap _aMap;
   Geolocation _geolocation;
   List<CircleMarker> markerList = [];
-  PlaceSearchOptions _placeSearchOptions;
   BehaviorSubject<TouchEvent> _touchController;
   BehaviorSubject<CameraPosition> _cameraController;
   BehaviorSubject<MarkerOptionsN.MarkerOptions> _markerController;
-  static const String _kType =
-      '010000|010100|020000|030000|040000|050000|050100|060000|060100|060200|060300|060400|070000|080000|080100|080300|080500|080600|090000|090100|090200|090300|100000|100100|110000|110100|120000|120200|120300|130000|140000|141200|150000|150100|150200|160000|160100|170000|170100|170200|180000|190000|200000';
 
   AMapWebController(this._aMap) {
-    _placeSearchOptions = PlaceSearchOptions(
-      extensions: 'all',
-      type: _kType,
-      pageIndex: 1,
-      pageSize: 50,
-    );
     _touchController = BehaviorSubject<TouchEvent>();
     _cameraController = BehaviorSubject<CameraPosition>();
     _markerController = BehaviorSubject<MarkerOptionsN.MarkerOptions>();
@@ -120,31 +113,21 @@ class AMapWebController extends AMapController {
       /// 定位插件初始化
       _geolocation = Geolocation(
         GeolocationOptions(
-            timeout: 15000,
-            buttonPosition: 'RB',
-            buttonOffset: Pixel(10, 20),
-            zoomToAccuracy: true,
-            showMarker: false,
-            panToLocation: true,
-            circleOptions: CircleOptions(
-              radius: 50,
-              fillColor: '#4398fd',
-              fillOpacity: 0.1,
-              strokeWeight: 0.5,
-              strokeColor: '#4398fd',
-              strokeStyle: 'solid',
-            )
-            // markerOptions: MarkerOptions(
-            //   offset: Pixel(-36, -36),
-            //   anchor: 'bottom-center',
-            //   icon: AMapIcon(
-            //     IconOptions(
-            //         imageSize: Size(36, 36),
-            //         image:
-            //         'https://a.amap.com/jsapi_demos/static/resource/img/user.png'),
-            //   ),
-            // ),
-            ),
+          timeout: 15000,
+          buttonPosition: 'RB',
+          buttonOffset: Pixel(10, 20),
+          zoomToAccuracy: true,
+          showMarker: false,
+          panToLocation: true,
+          circleOptions: CircleOptions(
+            radius: 50,
+            fillColor: '#4398fd',
+            fillOpacity: 0.1,
+            strokeWeight: 0.5,
+            strokeColor: '#4398fd',
+            strokeStyle: 'solid',
+          ),
+        ),
       );
       _aMap.addControl(_geolocation);
       location();
@@ -170,8 +153,6 @@ class AMapWebController extends AMapController {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
         _aMap.setZoom(17);
-        // debugPrint('location:${result.position}');
-        // _aMap.setCenter(result.position);
       } else {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
@@ -181,66 +162,6 @@ class AMapWebController extends AMapController {
     }));
     return Future.value();
   }
-
-  /// city：cityName（中文或中文全拼）、cityCode均可
-  Future<void> search(String keyWord, {city = ''}) async {
-    final PlaceSearch placeSearch = PlaceSearch(_placeSearchOptions);
-    placeSearch.setCity(city);
-    placeSearch.search(keyWord, searchResult);
-    return Future.value();
-  }
-
-  // Future<void> move(String lat, String lon) async {
-  //   final LngLat lngLat = LngLat(double.parse(lon), double.parse(lat));
-  //   _aMap.setCenter(lngLat);
-  //   _aMap.clearMap();
-  //   _aMap.add(Marker(_markerOptions));
-  //   return Future.value();
-  // }
-
-  /// 根据经纬度搜索
-  void searchNearBy(LngLat lngLat) {
-    final PlaceSearch placeSearch = PlaceSearch(_placeSearchOptions);
-    placeSearch.searchNearBy('', lngLat, 2000, searchResult);
-  }
-
-  Function(String status, SearchResult result) get searchResult =>
-      allowInterop((status, result) {
-        final List<PoiSearch> list = <PoiSearch>[];
-        if (status == 'complete') {
-          if (result is SearchResult) {
-            result.poiList?.pois?.forEach((dynamic poi) {
-              if (poi is Poi) {
-                final PoiSearch poiSearch = PoiSearch(
-                  cityCode: poi.citycode,
-                  cityName: poi.cityname,
-                  provinceName: poi.pname,
-                  title: poi.name,
-                  adName: poi.adname,
-                  provinceCode: poi.pcode,
-                  latitude: poi.location.getLat().toString(),
-                  longitude: poi.location.getLng().toString(),
-                );
-                list.add(poiSearch);
-              }
-            });
-          }
-        } else if (status == 'no_data') {
-          debugPrint('无返回结果');
-        } else {
-          debugPrint(result.toString());
-        }
-
-        /// 默认点移动到搜索结果的第一条
-        if (list.isNotEmpty) {
-          _aMap.setZoom(17);
-          // move(list[0].latitude, list[0].longitude);
-        }
-
-        // if (_widget.onPoiSearched != null) {
-        //   _widget.onPoiSearched(list);
-        // }
-      });
 
   @override
   // TODO: implement mapTouchEvent
@@ -337,41 +258,44 @@ class AMapWebController extends AMapController {
     _aMap.setFitView();
   }
 
+  ///Flutter web DomCanvas绘制引擎绘制marker时会出现缩放地图后marker移动到地图中心点的情况
+  ///所以web端添加的marker暂时都为CircleMarker
   @override
   Future addMarker(MarkerOptionsN.MarkerOptions options,
       {bool lockedToScreen = false, bool openAnimation = true}) async {
-    // TODO: implement addMarker
-    Marker marker = Marker(
-      MarkerOptions(
-        offset: Pixel(-36, -36),
-        position: LngLat(options.position.longitude, options.position.latitude),
-        icon: AMapIcon(
-          IconOptions(
-              imageSize: Size(36, 36),
-              image: options.icon ??
-                  "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
-        ),
-        anchor: 'bottom-center',
+    CircleMarker circle = CircleMarker(
+      CircleMarkerOptions(
+        center: LngLat(options.position.longitude, options.position.latitude),
+        radius: 7,
+        //半径
+        strokeColor: "#FFFFFF",
+        //线颜色
+        strokeOpacity: 1,
+        //线透明度
+        strokeWeight: 3,
+        //线粗细度
+        fillColor: options.markerFillColor ?? "#589afa",
+        //填充颜色
+        fillOpacity: 1,
+        extData: options.markerId,
       ),
     );
+    _aMap.add(circle);
 
-    ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
-    marker.on('touchstart', allowInterop((MapsEvent event) {
-      print(
-          'onMarkerClick event.target:${event.target.getPosition().getLat()}');
-      Marker op = event.target;
+    circle.on('click', allowInterop((MapsEvent event) {
+      print('onMarkerClick event.target:${event.lnglat.getLat()}');
+      CircleMarker op = event.target;
       _markerController.add(
         MarkerOptionsN.MarkerOptions(
-          position:
-              LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
-          title: op.getTitle(),
-          snippet: op.getContent(),
+          position: LatLng(op.getCenter().getLat(), op.getCenter().getLng()),
         ),
       );
     }));
-    _aMap.add(marker);
+    markerList.add(circle);
   }
 
+  ///Flutter web DomCanvas绘制引擎绘制marker时会出现缩放地图后marker移动到地图中心点的情况
+  ///所以web端添加的marker暂时都为CircleMarker
   @override
   Future addMarkers(List<MarkerOptionsN.MarkerOptions> optionsList,
       {bool moveToCenter = true,
@@ -391,21 +315,6 @@ class AMapWebController extends AMapController {
     }
 
     for (MarkerOptionsN.MarkerOptions op in optionsList) {
-      // Marker marker = Marker(
-      //   MarkerOptions(
-      //     map: _aMap,
-      //     offset: Pixel(-36, -36),
-      //     position: LngLat(op.position.longitude, op.position.latitude),
-      //     icon: AMapIcon(
-      //       IconOptions(
-      //           imageSize: Size(36, 36),
-      //           image: op.icon ??
-      //               "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"),
-      //     ),
-      //     anchor: 'bottom-center',
-      //   ),
-      // );
-      // marker.setPosition(LngLat(op.position.longitude, op.position.latitude),);
       CircleMarker circle = CircleMarker(
         CircleMarkerOptions(
           center: LngLat(op.position.longitude, op.position.latitude),
@@ -434,24 +343,7 @@ class AMapWebController extends AMapController {
         );
       }));
       markerList.add(circle);
-      // debugPrint('marker getPosition:${marker.getPosition().toString()}');
-      ///此处兼容移动端的点击事件，click不生效，因此使用touchstart
-      // marker.on('touchstart', allowInterop((MapsEvent event) {
-      //   print(
-      //       'onMarkerClick event.target:${event.target.getPosition().getLat()}');
-      //   Marker op = event.target;
-      //   _markerController.add(
-      //     MarkerOptionsN.MarkerOptions(
-      //       position:
-      //           LatLng(op.getPosition().getLat(), op.getPosition().getLng()),
-      //       title: op.getTitle(),
-      //       snippet: op.getContent(),
-      //     ),
-      //   );
-      // }));
-      // markerList.add(marker);
     }
-    // _aMap.add(markerList);
   }
 
   @override
@@ -469,7 +361,7 @@ class AMapWebController extends AMapController {
   @override
   Future changeLatLng(LatLng target) async {
     // TODO: implement changeLatLng
-    _aMap.setCenter(LngLat(target.longitude, target.latitude));
+    _aMap.panTo(LngLat(target.longitude, target.latitude));
   }
 
   @override

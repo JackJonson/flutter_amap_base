@@ -6,6 +6,7 @@ import 'package:amap_base/src/common/log.dart';
 import 'package:amap_base/src/interface/location/amap_location.dart';
 import 'package:amap_base/src/location/model/location.dart';
 import 'package:amap_base/src/location/model/location_client_options.dart';
+import 'package:amap_base/src/web/amap.dart';
 import 'package:amap_base/src/web/amap_controller.dart';
 import 'package:amap_base/src/web/amapjs.dart';
 import 'package:flutter/foundation.dart';
@@ -26,9 +27,9 @@ class AMapWebLocation extends AMapLocation {
   Timer _timer;
   final List<String> plugins = <String>['AMap.Geolocation', 'AMap.ToolBar'];
 
-  Geolocation get geoLocation=>_geolocation;
+  Geolocation get geoLocation => _geolocation;
 
-  AMapWebLocation._() {}
+  AMapWebLocation._();
 
   factory AMapWebLocation() {
     if (_instance == null) {
@@ -41,9 +42,9 @@ class AMapWebLocation extends AMapLocation {
 
   /// 初始化
   @override
-  Future init() {
+  Future init({String key}) {
     var promise = load(LoaderOptions(
-      key: '4e479545913a3a180b3cffc267dad646',
+      key: key ?? AMapWeb().key,
       version: '1.4.15',
       plugins: plugins,
     ));
@@ -66,21 +67,20 @@ class AMapWebLocation extends AMapLocation {
 
         /// 定位插件初始化
         _geolocation = Geolocation(GeolocationOptions(
-          timeout: 15000,
-          buttonPosition: 'RB',
-          buttonOffset: Pixel(10, 20),
-          zoomToAccuracy: true,
-          showMarker: false,
-          panToLocation: true,
-          circleOptions: CircleOptions(
-            radius: 50,
-            fillColor: '#4398fd',
-            fillOpacity: 0.1,
-            strokeWeight: 0.5,
-            strokeColor: '#4398fd',
-            strokeStyle:'solid',
-          )
-        ));
+            timeout: 15000,
+            buttonPosition: 'RB',
+            buttonOffset: Pixel(10, 20),
+            zoomToAccuracy: true,
+            showMarker: false,
+            panToLocation: true,
+            circleOptions: CircleOptions(
+              radius: 50,
+              fillColor: '#4398fd',
+              fillOpacity: 0.1,
+              strokeWeight: 0.5,
+              strokeColor: '#4398fd',
+              strokeStyle: 'solid',
+            )));
 
         _aMap.addControl(_geolocation);
         debugPrint('Add geo plugin success');
@@ -136,15 +136,18 @@ class AMapWebLocation extends AMapLocation {
   /// 开始定位, 返回定位 结果流
   @override
   Stream<Location> startLocate(LocationClientOptions options) {
+    final locationCallback = (timer) async {
+      Location location = await getLocation(options);
+      _locationController.add(location);
+    };
     debugPrint(
         'startLocate dart端参数: options.toJsonString() -> ${options.toJsonString()}');
     if (options != null) {
       if (!options.isOnceLocation) {
-        _timer = Timer.periodic(Duration(milliseconds: options.interval),
-            (timer) async {
-          Location location = await getLocation(options);
-          _locationController.add(location);
-        });
+        ///调用连续定位时就定位一次
+        locationCallback.call(null);
+        _timer = Timer.periodic(
+            Duration(milliseconds: options.interval), locationCallback);
       }
       return _locationController.stream;
     }
