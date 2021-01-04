@@ -72,17 +72,17 @@ class AMapWebController extends AMapController {
     }));
 
     ///移动事件-开始
-    _aMap.on('movestart', allowInterop((event) {
-      _cameraController.add(
-        CameraPosition(
-          target: LatLng(
-            _aMap.getCenter().getLat(),
-            _aMap.getCenter().getLng(),
-          ),
-          zoom: _aMap.getZoom().toDouble(),
-        ),
-      );
-    }));
+    // _aMap.on('movestart', allowInterop((event) {
+    //   _cameraController.add(
+    //     CameraPosition(
+    //       target: LatLng(
+    //         _aMap.getCenter().getLat(),
+    //         _aMap.getCenter().getLng(),
+    //       ),
+    //       zoom: _aMap.getZoom().toDouble(),
+    //     ),
+    //   );
+    // }));
 
     _aMap.on('moveend', allowInterop((event) {
       _cameraController.add(
@@ -153,6 +153,10 @@ class AMapWebController extends AMapController {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
         _aMap.setZoom(17);
+        changeLatLng(LatLng(
+          result.position.getLat(),
+          result.position.getLng(),
+        ));
       } else {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
@@ -307,9 +311,8 @@ class AMapWebController extends AMapController {
         _aMap.remove(m);
       }
       markerList.clear();
-      // _aMap.remove(markerList);
     }
-    if (clear) {
+    if (clear || (optionsList?.isEmpty ?? true)) {
       markerList.clear();
       _aMap.clearMap();
     }
