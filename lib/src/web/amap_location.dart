@@ -117,15 +117,15 @@ class AMapWebLocation extends AMapLocation {
         /// 另外还有个别浏览器（如google Chrome浏览器等）本身的定位接口是黑洞，通过其请求定位完全没有回应，也会超时返回失败。
         ///
         ///TODO: 删除这里的测试数据
-        _completer.complete(
-          Location(
-            latitude: 30.137975,
-            longitude: 119.982666,
-            city: '杭州市',
-            address: '杭州市富阳区银湖街道',
-          ),
-        );
-        // _completer.completeError(result.message);
+        // _completer.complete(
+        //   Location(
+        //     latitude: 30.137975,
+        //     longitude: 119.982666,
+        //     city: '杭州市',
+        //     address: '杭州市富阳区银湖街道',
+        //   ),
+        // );
+        _completer.completeError(result.message);
         debugPrint(result.message);
       }
     }));
