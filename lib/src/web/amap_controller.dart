@@ -153,10 +153,10 @@ class AMapWebController extends AMapController {
     _geolocation.getCurrentPosition(allowInterop((status, result) {
       if (status == 'complete') {
         _aMap.setZoom(17);
-        changeLatLng(LatLng(
-          result.position.getLat(),
-          result.position.getLng(),
-        ));
+        // changeLatLng(LatLng(
+        //   result.position.getLat(),
+        //   result.position.getLng(),
+        // ));
       } else {
         /// 异常查询：https://lbs.amap.com/faq/js-api/map-js-api/position-related/43361
         /// Get geolocation time out：浏览器定位超时，包括原生的超时，可以适当增加超时属性的设定值以减少这一现象，
