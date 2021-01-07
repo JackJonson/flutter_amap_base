@@ -311,6 +311,8 @@ class AMapWebController extends AMapController {
         _aMap.remove(m);
       }
       markerList.clear();
+      _aMap.clearMap();
+      debugPrint('_aMap.clearMap()');
     }
     if (clear || (optionsList?.isEmpty ?? true)) {
       markerList.clear();
