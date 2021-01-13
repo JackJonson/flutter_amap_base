@@ -103,12 +103,12 @@ class AMapWebLocation extends AMapLocation {
           Location(
             latitude: result.position.getLat(),
             longitude: result.position.getLng(),
-            city: result.addressComponent.city,
+            city: result.addressComponent?.city,
             address: result.formattedAddress,
-            district: result.addressComponent.district,
-            province: result.addressComponent.province,
-            street: result.addressComponent.street,
-            streetNum: result.addressComponent.streetNumber,
+            district: result.addressComponent?.district,
+            province: result.addressComponent?.province,
+            street: result.addressComponent?.street,
+            streetNum: result.addressComponent?.streetNumber,
           ),
         );
       } else {
